@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "166900846287",
+    "firebase_url": "https://prj2020-d7849.firebaseio.com",
+    "project_id": "prj2020-d7849",
+    "storage_bucket": "prj2020-d7849.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:166900846287:android:21b79fa84d386a67b631ba",
+        "android_client_info": {
+          "package_name": "com.gdx.tdl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "166900846287-knjueqmrqddrf10e7hev96a7bncmc737.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTCyzA6ogURi0ILPmPQQ6pkLMjycOt9PU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "166900846287-knjueqmrqddrf10e7hev96a7bncmc737.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
