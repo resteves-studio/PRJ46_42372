@@ -22,21 +22,23 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class CourtScreen extends AbstractScreen implements GestureDetector.GestureListener {
-    private static final int MENU   =  0;
-    private static final int RUN    =  1;
-    private static final int DRIBLE =  2;
-    private static final int PASS   =  3;
-    private static final int SCREEN =  4;
-    private static final int HELP   =  5;
-    private static final int PLAY   =  6;
-    private static final int FRAME  =  7;
-    private static final int RESET  =  8;
-    private static final int MANMAN =  9;
-    private static final int ZONE   = 10;
-    private static final int SVFILE = 11;
-    private static final int SVPDF  = 12;
-    private static final int SVVID  = 13;
-    private static final int NOTES  = 14;
+    private static final int MENU   = 0;
+    private static final int FRAME  = 1;
+    private static final int RUN    = 2;
+    private static final int PASS   = 3;
+    private static final int SCREEN = 4;
+    private static final int HELP   = 5;
+
+    private static final int PLAY   = 6;
+    private static final int RESET  = 7;
+
+    private static final int MANMAN = 8;
+    private static final int ZONE   = 9;
+
+    private static final int SVFILE = 10;
+    private static final int SVPDF  = 11;
+    private static final int SVVID  = 12;
+    private static final int NOTES  = 13;
 
     private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 
@@ -264,11 +266,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             int opt = optionsTable.getCurrentOption();
 
             if (opt == OptionsTable.OFFE) {
-                if (btn == 1) return RUN;
-                if (btn == 2) return DRIBLE;
+                if (btn == 1) return FRAME;
+                if (btn == 2) return RUN;
                 if (btn == 3) return PASS;
                 if (btn == 4) return SCREEN;
-                if (btn == 5) return FRAME;
+                if (btn == 5) return HELP;
             } else if (opt == OptionsTable.DEFE) {
                 if (btn == 1) return MANMAN;
                 if (btn == 2) return ZONE;
@@ -296,21 +298,19 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         int curr = optionsTable.getCurrentOption();
 
         if (curr == OptionsTable.OFFE) {
-            offensiveOptions[option].setIsSelected(true);
+            offensiveOptions[btn].setIsSelected(true);
             for (OptionButton opt : offensiveOptions)
-                if (opt != offensiveOptions[option])
+                if (opt != offensiveOptions[btn])
                     opt.setIsSelected(false);
         } else if (curr == OptionsTable.DEFE) {
-            System.out.println("Damn cuz");
-            defensiveOptions[option].setIsSelected(true);
+            defensiveOptions[btn].setIsSelected(true);
             for (OptionButton opt : defensiveOptions)
-                if (opt != defensiveOptions[option])
+                if (opt != defensiveOptions[btn])
                     opt.setIsSelected(false);
         } else if (curr == OptionsTable.TACT) {
-            System.out.println("Damn cuz two point oh");
-            tacticCreationOptions[option].setIsSelected(true);
+            tacticCreationOptions[btn].setIsSelected(true);
             for (OptionButton opt : tacticCreationOptions)
-                if (opt != tacticCreationOptions[option])
+                if (opt != tacticCreationOptions[btn])
                     opt.setIsSelected(false);
         }
     }
@@ -423,10 +423,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     playerRun(posHit);
                     reset();
                 }
-                break;
-            case DRIBLE:
-                playerDribble(posHit);
-                reset();
                 break;
             case PASS:
                 if (bodyHit != null) {
@@ -543,7 +539,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
         reset();
         uncheckPlayers(offense);
-        menuSelected = false;
+        if (menuSelected) menuSelected = false;
 
         offense[firstPlayerWithBall].setHasBall(true);
         ball.setPlayerToFollow(offense[firstPlayerWithBall].getTarget());

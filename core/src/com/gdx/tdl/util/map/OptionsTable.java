@@ -30,17 +30,17 @@ public class OptionsTable {
 
     public void offensiveOptionsDraw() {
         offensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
-        offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.runOption, AssetLoader.runSelectedOption);
-        offensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.dribleOption, AssetLoader.dribleSelectedOption);
+        offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.plus, AssetLoader.plusSelected);
+        offensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.runOption, AssetLoader.runSelectedOption);
         offensiveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.passOption, AssetLoader.passSelectedOption);
         offensiveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.screenOption, AssetLoader.screenSelectedOption);
-        offensiveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.plus, AssetLoader.plusSelected);
+        offensiveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
     }
 
     public void defensiveOptionsDraw() {
         defensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
-        defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3.25f/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
-        defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*1.75f/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
+        defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3.5f/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
+        defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2f/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
         defensiveOptions[3] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
     }
 

@@ -84,6 +84,7 @@ public class OptionButton {
 
     // getteres
     public Body getBody() { return body; }
+    public boolean getIsSelected() { return this.isSelected; }
 
     // setters
     public void setIsSelected(boolean isSelected) { this.isSelected = isSelected; }
