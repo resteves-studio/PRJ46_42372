@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.ai.steer.behaviors.BlendedSteering;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -20,18 +21,26 @@ import com.gdx.tdl.util.map.AbstractScreen;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class CourtScreen extends AbstractScreen {
-    private static final int MENU   = 0;
-    private static final int RUN    = 1;
-    private static final int DRIBLE = 2;
-    private static final int PASS   = 3;
-    private static final int SCREEN = 4;
-    private static final int HELP   = 5;
-    private static final int PLAY   = 6;
-    private static final int FRAME  = 7;
-    private static final int RESET  = 8;
+public class CourtScreen extends AbstractScreen implements GestureDetector.GestureListener {
+    private static final int MENU   =  0;
+    private static final int RUN    =  1;
+    private static final int DRIBLE =  2;
+    private static final int PASS   =  3;
+    private static final int SCREEN =  4;
+    private static final int HELP   =  5;
+    private static final int PLAY   =  6;
+    private static final int FRAME  =  7;
+    private static final int RESET  =  8;
+    private static final int MANMAN =  9;
+    private static final int ZONE   = 10;
+    private static final int SVFILE = 11;
+    private static final int SVPDF  = 12;
+    private static final int SVVID  = 13;
+    private static final int NOTES  = 14;
 
-    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+    private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+    private float[] elColor = new float[] { 0, 120/255f, 200/255f };
 
     private EmptyAgent basket;
     private PlayerO[] offense;
@@ -42,17 +51,19 @@ public class CourtScreen extends AbstractScreen {
     private boolean permissionToPlay, stillPlayingMove;
     private int flag, firstPlayerWithBall;
 
-    private OptionButton[] offensiveOptions;
+    private OptionButton[] offensiveOptions, defensiveOptions, tacticCreationOptions, saveOptions;
 
     private MenuScreen menu;
     private HelpScreen help;
+
+    private int trueCounter = 0;
 
     private int playerWithBall;
 
     private Body bodyHit;
     private int bodyHitId, option, btn;
     private boolean cancelSelect, isSomeoneSelected;
-    private boolean blueColor, menuSelected, helpSelected;
+    private boolean menuSelected, helpSelected;
 
     public CourtScreen() {
         super();
@@ -62,8 +73,14 @@ public class CourtScreen extends AbstractScreen {
         permissionToPlay = stillPlayingMove = false;
 
         // tabela com as opcoes ofensivas para os jogadores
-        optionsTable.offensiveOptionsDraw(world);
+        optionsTable.offensiveOptionsDraw();
         offensiveOptions = optionsTable.getOffensiveOptions();
+        optionsTable.defensiveOptionsDraw();
+        defensiveOptions = optionsTable.getDefensiveOptions();
+        optionsTable.tacticCreationOptionsDraw();
+        tacticCreationOptions = optionsTable.getTacticCreationOptions();
+        optionsTable.saveOptionsDraw();
+        saveOptions = optionsTable.getSaveOptions();
 
         // ecras secundarios
         menu = new MenuScreen(world, optionsTable);
@@ -76,7 +93,6 @@ public class CourtScreen extends AbstractScreen {
 
         // variaveis auxiliares
         flag = 5;
-        blueColor = true;
         playerWithBall = 1;
         menuSelected = helpSelected = false;
 
@@ -118,10 +134,10 @@ public class CourtScreen extends AbstractScreen {
         // atribuicao dos comportamentos dos atacantes
         for (PlayerO playerO : offense) {
             Arrive<Vector2> arriveBO = new Arrive<>(playerO, playerO.getTarget())
-                .setTimeToTarget(0.01f)
-                .setArrivalTolerance(0.01f)
-                .setDecelerationRadius(playerBoundingRadius * 4)
-                .setEnabled(true);
+                    .setTimeToTarget(0.01f)
+                    .setArrivalTolerance(0.01f)
+                    .setDecelerationRadius(playerBoundingRadius * 4)
+                    .setEnabled(true);
 
             /*Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerO, world, playerO.getBoundingRadius()*1.5f);
             CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerO, proximity);
@@ -133,9 +149,9 @@ public class CourtScreen extends AbstractScreen {
                 .setTarget(basket);*/
 
             BlendedSteering<Vector2> behaviours = new BlendedSteering<>(playerO)
-                .add(arriveBO, 1f);
-                //.add(collisionAvoid, 1f)
-                //.add(lwyag, 1f);
+                    .add(arriveBO, 1f);
+            //.add(collisionAvoid, 1f)
+            //.add(lwyag, 1f);
 
             playerO.setBehaviour(behaviours);
         }
@@ -148,10 +164,10 @@ public class CourtScreen extends AbstractScreen {
             playerD.setPlayerWithBall(offense[playerWithBall-1]);
 
             Arrive<Vector2> arriveBD = new Arrive<>(playerD, playerD.getMainTarget())
-                .setTimeToTarget(0.01f)
-                .setArrivalTolerance(0.01f)
-                .setDecelerationRadius(playerBoundingRadius * 4)
-                .setEnabled(true);
+                    .setTimeToTarget(0.01f)
+                    .setArrivalTolerance(0.01f)
+                    .setDecelerationRadius(playerBoundingRadius * 4)
+                    .setEnabled(true);
 
             /*Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerD, world, playerD.getBoundingRadius()*1.5f);
             CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerD, proximity);
@@ -164,19 +180,19 @@ public class CourtScreen extends AbstractScreen {
 
             BlendedSteering<Vector2> behaviours = new BlendedSteering<>(playerD)
                     .add(arriveBD, 1f);
-                    //.add(collisionAvoid, 1f)
-                    //.add(lwyag, 1f);
+            //.add(collisionAvoid, 1f)
+            //.add(lwyag, 1f);
 
             playerD.setBehaviour(behaviours);
         }
 
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(new GestureDetector(this));
     }
 
     @Override
     public void buildScreen(float delta) {
         // cor de fundo
-        Gdx.gl.glClearColor(blueColor ? 0 : 200/255f, blueColor ? 120/255f : 0, blueColor ? 200/255f : 0, 1f);
+        Gdx.gl.glClearColor(elColor[0], elColor[1], elColor[2], 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (permissionToPlay)
@@ -200,7 +216,13 @@ public class CourtScreen extends AbstractScreen {
 
             if (optionsTable.getCurrentOption() == OptionsTable.OFFE) {
                 optionsTable.update(offensiveOptions);
-            } // else if defensive options
+            } else if (optionsTable.getCurrentOption() == OptionsTable.DEFE) {
+                optionsTable.update(defensiveOptions);
+            } else if (optionsTable.getCurrentOption() == OptionsTable.TACT) {
+                optionsTable.update(tacticCreationOptions);
+            } else if (optionsTable.getCurrentOption() == OptionsTable.SAVE) {
+                optionsTable.update(saveOptions);
+            }
         }
     }
 
@@ -233,18 +255,37 @@ public class CourtScreen extends AbstractScreen {
         // botoes disponiveis dependem do ecra atual
         if (menuSelected) {
             if (btn == 0) return MENU;
-            if (btn == 2) return PLAY;
-            if (btn == 3) return FRAME;
-            if (btn == 4) return RESET;
+            if (btn == 1) return HELP;
         }
 
         if (!helpSelected) {
             if (btn == 0) return MENU;
-            if (btn == 1) return RUN;
-            if (btn == 2) return DRIBLE;
-            if (btn == 3) return PASS;
-            if (btn == 4) return SCREEN;
-            if (btn == 5) return HELP;
+
+            int opt = optionsTable.getCurrentOption();
+
+            if (opt == OptionsTable.OFFE) {
+                if (btn == 1) return RUN;
+                if (btn == 2) return DRIBLE;
+                if (btn == 3) return PASS;
+                if (btn == 4) return SCREEN;
+                if (btn == 5) return FRAME;
+            } else if (opt == OptionsTable.DEFE) {
+                if (btn == 1) return MANMAN;
+                if (btn == 2) return ZONE;
+                if (btn == 3) return HELP;
+            } else if (opt == OptionsTable.TACT) {
+                if (btn == 1) return PLAY;
+                if (btn == 2) return FRAME;
+                if (btn == 3) return RESET;
+                if (btn == 4) return HELP;
+            } else if (opt == OptionsTable.SAVE) {
+                if (btn == 1) return SVFILE;
+                if (btn == 2) return SVPDF;
+                if (btn == 3) return SVVID;
+                if (btn == 4) return NOTES;
+                if (btn == 5) return HELP;
+            }
+
         } else if (btn == 0) return HELP;
 
         return -1;
@@ -252,16 +293,32 @@ public class CourtScreen extends AbstractScreen {
 
     // selecciona um botao
     private void tagButton() {
-        offensiveOptions[option].setIsSelected(true);
-        for (OptionButton opt : offensiveOptions)
-            if (opt != offensiveOptions[option])
-                opt.setIsSelected(false);
+        int curr = optionsTable.getCurrentOption();
+
+        if (curr == OptionsTable.OFFE) {
+            offensiveOptions[option].setIsSelected(true);
+            for (OptionButton opt : offensiveOptions)
+                if (opt != offensiveOptions[option])
+                    opt.setIsSelected(false);
+        } else if (curr == OptionsTable.DEFE) {
+            System.out.println("Damn cuz");
+            defensiveOptions[option].setIsSelected(true);
+            for (OptionButton opt : defensiveOptions)
+                if (opt != defensiveOptions[option])
+                    opt.setIsSelected(false);
+        } else if (curr == OptionsTable.TACT) {
+            System.out.println("Damn cuz two point oh");
+            tacticCreationOptions[option].setIsSelected(true);
+            for (OptionButton opt : tacticCreationOptions)
+                if (opt != tacticCreationOptions[option])
+                    opt.setIsSelected(false);
+        }
     }
 
     // selecciona um player
-    private boolean tagPlayer() {
+    private void tagPlayer() {
         if ((option == PASS || option == SCREEN) && !offense[bodyHitId].hasBall())
-            return false;
+            return;
         else {
             offense[bodyHitId].setTagged(true);
             isSomeoneSelected = true;
@@ -269,7 +326,6 @@ public class CourtScreen extends AbstractScreen {
                 if (playerO != offense[bodyHitId])
                     playerO.setTagged(false);
         }
-        return false;
     }
 
     // retorna o player que estiver seleccionado
@@ -360,7 +416,7 @@ public class CourtScreen extends AbstractScreen {
     }
 
     // aplica a acao correspondente ao atacante
-    private boolean playerAction(Vector2 posHit) {
+    private void playerAction(Vector2 posHit) {
         switch (option) {
             case RUN:
                 if (bodyHit == null) {
@@ -383,14 +439,12 @@ public class CourtScreen extends AbstractScreen {
                 reset();
                 break;
         }
-
-        return false;
     }
 
     // adicao de uma nova frame a tatica atual
     private void addNewFrame() {
         // alteracoes necessarias no ecra
-        menuSelected = !menuSelected;
+        menuSelected = false;
         uncheckPlayers(offense);
 
         // definidas as posicoes iniciais
@@ -489,7 +543,7 @@ public class CourtScreen extends AbstractScreen {
 
         reset();
         uncheckPlayers(offense);
-        menuSelected = !menuSelected;
+        menuSelected = false;
 
         offense[firstPlayerWithBall].setHasBall(true);
         ball.setPlayerToFollow(offense[firstPlayerWithBall].getTarget());
@@ -500,12 +554,15 @@ public class CourtScreen extends AbstractScreen {
     private void whatDidITouch(Vector2 posHit) {
         bodyHit = null;
 
+        int curr = optionsTable.getCurrentOption();
+
         // verifica se carregou num botao das opcoes do ecra principal, do menu ou do help
-        if (menuSelected)      setBtn(menu.getMenuOptions(), posHit);
+        if (menuSelected) setBtn(menu.getMenuOptions(), posHit);
         else if (helpSelected) setBtn(help.getHelpOptions(), posHit);
-        else if (optionsTable.getCurrentOption() == OptionsTable.OFFE) setBtn(offensiveOptions, posHit);
-        /*else if (optionsTable.getCurrentOption() == OptionsTable.DEFE)
-            setBtn(defensiveOptions, posHit);*/
+        else if (curr == OptionsTable.OFFE) setBtn(offensiveOptions, posHit);
+        else if (curr == OptionsTable.DEFE) setBtn(defensiveOptions, posHit);
+        else if (curr == OptionsTable.TACT) setBtn(tacticCreationOptions, posHit);
+        else if (curr == OptionsTable.SAVE) setBtn(saveOptions, posHit);
 
         // verifica se e um body indiferente ao toque (bola, cesto ou defesa)
         if (touchedBody(ball.getBody(), posHit)) return;
@@ -530,9 +587,8 @@ public class CourtScreen extends AbstractScreen {
         }
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        final Vector2 posHit = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+    private void oneTap(float x, float y) {
+        final Vector2 posHit = new Vector2(x, Gdx.graphics.getHeight() - y);
 
         // primeiro ve no que tocou
         whatDidITouch(posHit);
@@ -540,13 +596,13 @@ public class CourtScreen extends AbstractScreen {
         // verifica se foi um botao novo
         if (option != btn) {
             option = buttonHit();
-            if (option < 6) tagButton(); // TODO CHECK
+            tagButton(); // TODO CHECK
 
             // reproducao da tatica
             if (option == PLAY && tactic.getSize() > 0) {
                 tactic.setNFrames(tactic.getSize() / 5);
-                menuSelected = !menuSelected;
                 uncheckPlayers(offense);
+                menuSelected = false;
                 flag = 5;
 
                 // coloca players e bola na posicao inicial
@@ -587,24 +643,68 @@ public class CourtScreen extends AbstractScreen {
                 reset();
             }
 
-            return false;
+            return;
         }
 
         // verifica se tocou num atacante
         if (bodyHitId != -1) {
-            if (!isSomeoneSelected)
-                return tagPlayer();
+            if (!isSomeoneSelected) {
+                tagPlayer();
+                return;
+            }
 
             if (cancelSelect) {
                 cancelSelect = false;
                 isSomeoneSelected = false;
                 offense[bodyHitId].setTagged(false);
                 bodyHitId = -1;
-                return false;
+                return;
             }
-        } else return false;
+        } else return;
 
-        return playerAction(posHit);
+        playerAction(posHit);
+    }
+
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        trueCounter = count;
+        if (trueCounter > 1) {
+            int opt = optionsTable.getCurrentOption();
+
+            if (opt == OptionsTable.OFFE) {
+                optionsTable.setCurrentOption(OptionsTable.DEFE);
+                elColor[0] = 200/255f;
+                elColor[1] = 20/255f;
+                elColor[2] = 0;
+            } else if (opt == OptionsTable.DEFE) {
+                optionsTable.setCurrentOption(OptionsTable.TACT);
+                elColor[0] = 200/255f;
+                elColor[1] = 80/255f;
+                elColor[2] = 0;
+            } else if (opt == OptionsTable.TACT) {
+                optionsTable.setCurrentOption(OptionsTable.SAVE);
+                elColor[0] = 50/255f;
+                elColor[1] = 150/255f;
+                elColor[2] = 50/255f;
+            } else if (opt == OptionsTable.SAVE) {
+                optionsTable.setCurrentOption(OptionsTable.OFFE);
+                elColor[0] = 0;
+                elColor[1] = 120/255f;
+                elColor[2] = 200/255f;
+            }
+
+            trueCounter = 0;
+        } else {
+            exec.schedule(() -> {
+                if (trueCounter == 1) {
+                    oneTap(x, y);
+                    trueCounter = 0;
+                }
+            }, 200, TimeUnit.MILLISECONDS);
+        }
+
+        return false;
     }
 
 
@@ -624,6 +724,17 @@ public class CourtScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
     }
+
+    @Override // TODO Maybe usar para definir posicoes iniciais dos jogadores?
+    public boolean longPress(float x, float y) { return false; }
+
+    @Override public boolean touchDown(float x, float y, int pointer, int button) { return false; }
+    @Override public boolean fling(float velocityX, float velocityY, int button) { return false; }
+    @Override public boolean pan(float x, float y, float deltaX, float deltaY) { return false; }
+    @Override public boolean panStop(float x, float y, int pointer, int button) { return false; }
+    @Override public boolean zoom(float initialDistance, float distance) { return false; }
+    @Override public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) { return false; }
+    @Override public void pinchStop() { }
 
 
 

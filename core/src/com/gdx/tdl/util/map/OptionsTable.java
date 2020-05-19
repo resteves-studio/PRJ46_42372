@@ -6,46 +6,64 @@ import com.gdx.tdl.util.AssetLoader;
 
 public class OptionsTable {
     public static final int OFFE = 0;
-    static final int DEFE = 1;
+    public static final int DEFE = 1;
+    public static final int TACT = 2;
+    public static final int SAVE = 3;
 
-    OptionButton[] offensiveOptions, defensiveOptions, menuOptions, helpOptions;
+    private OptionButton[] offensiveOptions, defensiveOptions, tacticOptions, saveOptions, menuOptions, helpOptions;
 
-    int currentOption;
+    private int currentOption;
+    private World world;
 
     OptionsTable(World world) {
-        offensiveOptions = new OptionButton[6];
-        defensiveOptions = new OptionButton[0];
-        menuOptions = new OptionButton[9];
-        helpOptions = new OptionButton[1];
+        this.world = world;
 
-        currentOption = OFFE;
+        this.offensiveOptions = new OptionButton[6];
+        this.defensiveOptions = new OptionButton[4];
+        this.tacticOptions = new OptionButton[5];
+        this.saveOptions = new OptionButton[6];
+        this.menuOptions = new OptionButton[2];
+        this.helpOptions = new OptionButton[1];
+
+        this.currentOption = OFFE;
     }
 
-    // TODO keep open the idea of creating menu and deffensive options with this
-
-    public void offensiveOptionsDraw(World world) {
+    public void offensiveOptionsDraw() {
         offensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
         offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.runOption, AssetLoader.runSelectedOption);
         offensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.dribleOption, AssetLoader.dribleSelectedOption);
         offensiveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.passOption, AssetLoader.passSelectedOption);
         offensiveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.screenOption, AssetLoader.screenSelectedOption);
-        offensiveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+        offensiveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.plus, AssetLoader.plusSelected);
     }
 
-    void defensiveOptionsDraw(World world) {
-        // TODO
+    public void defensiveOptionsDraw() {
+        defensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
+        defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3.25f/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
+        defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*1.75f/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
+        defensiveOptions[3] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+    }
+
+    public void tacticCreationOptionsDraw() {
+        tacticOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
+        tacticOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.play, AssetLoader.playSelected);
+        tacticOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.plus, AssetLoader.plusSelected);
+        tacticOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.reset, AssetLoader.resetSelected);
+        tacticOptions[4] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+    }
+
+    public void saveOptionsDraw() {
+        saveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
+        saveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.saveFile);
+        saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.savePDF);
+        saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.saveVideo);
+        saveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.notes);
+        saveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
     }
 
     public void menuOptionsDraw(World world) {
         menuOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption, "Menu", Gdx.graphics.getHeight()/300f);
         menuOptions[1] = new OptionButton(world, 0, 0, AssetLoader.helpOption, "Help", Gdx.graphics.getHeight()/300f);
-        menuOptions[2] = new OptionButton(world, Gdx.graphics.getWidth()*3/10f, Gdx.graphics.getHeight()*5/6f, AssetLoader.play, "Play", Gdx.graphics.getHeight()/350f);
-        menuOptions[3] = new OptionButton(world, Gdx.graphics.getWidth()*3/10f, Gdx.graphics.getHeight()*4/6f, AssetLoader.plus, "Frame", Gdx.graphics.getHeight()/350f);
-        menuOptions[4] = new OptionButton(world, Gdx.graphics.getWidth()*3/10f, Gdx.graphics.getHeight()*3/6f, AssetLoader.reset, "Reset", Gdx.graphics.getHeight()/350f);
-        menuOptions[5] = new OptionButton(world, Gdx.graphics.getWidth()*6/10f, Gdx.graphics.getHeight()*5/6f, AssetLoader.saveFile, "Save File", Gdx.graphics.getHeight()/450f);
-        menuOptions[6] = new OptionButton(world, Gdx.graphics.getWidth()*6/10f, Gdx.graphics.getHeight()*4/6f, AssetLoader.savePDF, "Save PDF", Gdx.graphics.getHeight()/450f);
-        menuOptions[7] = new OptionButton(world, Gdx.graphics.getWidth()*6/10f, Gdx.graphics.getHeight()*3/6f, AssetLoader.saveVideo, "Save Video", Gdx.graphics.getHeight()/450f);
-        menuOptions[8] = new OptionButton(world, Gdx.graphics.getWidth()*6/10f, Gdx.graphics.getHeight()*2/6f, AssetLoader.notes, "Notes", Gdx.graphics.getHeight()/450f);
     }
 
     public void helpOptionsDraw(World world) {
@@ -60,21 +78,15 @@ public class OptionsTable {
     }
 
     // getters
-    public OptionButton[] getOffensiveOptions() {
-        return offensiveOptions;
-    }
-    OptionButton[] getDefensiveOptions() {
-        return defensiveOptions;
-    }
-    public OptionButton[] getMenuOptions() {
-        return menuOptions;
-    }
-    public OptionButton[] getHelpOptions() {
-        return helpOptions;
-    }
+    public OptionButton[] getOffensiveOptions() { return offensiveOptions; }
+    public OptionButton[] getDefensiveOptions() { return defensiveOptions; }
+    public OptionButton[] getTacticCreationOptions() { return tacticOptions; }
+    public OptionButton[] getSaveOptions() { return saveOptions; }
+    public OptionButton[] getMenuOptions() { return menuOptions; }
+    public OptionButton[] getHelpOptions() { return helpOptions; }
     public int getCurrentOption() { return currentOption; }
 
     // setters
-    void setCurrentOption(int currentOption) { this.currentOption = currentOption; }
+    public void setCurrentOption(int currentOption) { this.currentOption = currentOption; }
 
 }

@@ -17,10 +17,13 @@ public class AssetLoader {
     public static Texture empty;
     public static Texture check;
     public static Texture play, plus, reset;
+    public static Texture playSelected, plusSelected, resetSelected;
     public static Texture saveFile, savePDF, saveVideo, notes;
     public static Texture menuOption, helpOption;
     public static Texture runOption, dribleOption, passOption, screenOption;
     public static Texture runSelectedOption, dribleSelectedOption, passSelectedOption, screenSelectedOption;
+    public static Texture manToManOption, zone23Option;
+    public static Texture manToManSelectedOption, zone23SelectedOption;
     public static Texture goback;
     //public static Texture one, two, three, four, five;
     public static BitmapFont font;
@@ -44,6 +47,9 @@ public class AssetLoader {
         play = new Texture("play.png");
         plus = new Texture("plus.png");
         reset = new Texture("reset.png");
+        playSelected = new Texture("playSelected.png");
+        plusSelected = new Texture("plusSelected.png");
+        resetSelected = new Texture("resetSelected.png");
         saveFile = new Texture("saveFile.png");
         savePDF = new Texture("savePDF.png");
         saveVideo = new Texture("saveVideo.png");
@@ -58,6 +64,10 @@ public class AssetLoader {
         dribleSelectedOption = new Texture("dribleSelected.png");
         passSelectedOption = new Texture("passSelected.png");
         screenSelectedOption = new Texture("screenSelected.png");
+        manToManOption = new Texture("mantoman.png");
+        zone23Option = new Texture("zona23.png");
+        manToManSelectedOption = new Texture("mantomanSelected.png");
+        zone23SelectedOption = new Texture("zona23Selected.png");
         goback = new Texture("goback.png");
         /*one = new Texture("1.png");
         two = new Texture("2.png");
@@ -88,6 +98,9 @@ public class AssetLoader {
         play.dispose();
         plus.dispose();
         reset.dispose();
+        playSelected.dispose();
+        plusSelected.dispose();
+        resetSelected.dispose();
         saveFile.dispose();
         savePDF.dispose();
         saveVideo.dispose();
@@ -102,6 +115,10 @@ public class AssetLoader {
         dribleSelectedOption.dispose();
         passSelectedOption.dispose();
         screenSelectedOption.dispose();
+        manToManOption.dispose();
+        zone23Option.dispose();
+        manToManSelectedOption.dispose();
+        zone23SelectedOption.dispose();
         goback.dispose();
         /*one.dispose();
         two.dispose();
