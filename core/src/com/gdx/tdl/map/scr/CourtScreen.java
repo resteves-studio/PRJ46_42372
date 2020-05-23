@@ -299,9 +299,15 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
         if (curr == OptionsTable.OFFE) {
             offensiveOptions[btn].setIsSelected(true);
-            for (OptionButton opt : offensiveOptions)
-                if (opt != offensiveOptions[btn])
-                    opt.setIsSelected(false);
+            for (OptionButton opt : offensiveOptions) {
+                if (opt == offensiveOptions[btn]) {
+                    if (btn == FRAME) {
+                        exec.schedule(() -> {
+                            opt.setIsSelected(false);
+                        }, 500, TimeUnit.MILLISECONDS);
+                    }
+                } else opt.setIsSelected(false);
+            }
         } else if (curr == OptionsTable.DEFE) {
             defensiveOptions[btn].setIsSelected(true);
             for (OptionButton opt : defensiveOptions)
@@ -309,9 +315,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     opt.setIsSelected(false);
         } else if (curr == OptionsTable.TACT) {
             tacticCreationOptions[btn].setIsSelected(true);
-            for (OptionButton opt : tacticCreationOptions)
-                if (opt != tacticCreationOptions[btn])
-                    opt.setIsSelected(false);
+            for (OptionButton opt : tacticCreationOptions) {
+                if (opt == tacticCreationOptions[btn])
+                    exec.schedule(() -> { opt.setIsSelected(false); }, 500, TimeUnit.MILLISECONDS);
+                else opt.setIsSelected(false);
+            }
         }
     }
 
@@ -543,7 +551,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
         offense[firstPlayerWithBall].setHasBall(true);
         ball.setPlayerToFollow(offense[firstPlayerWithBall].getTarget());
-        ball.setAtPosition(ball.getTarget().getPosition());
+        ball.setAtPosition(ball.getInitialPos());
     }
 
     // verifica no que tocou
@@ -665,39 +673,45 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     @Override
     public boolean tap(float x, float y, int count, int button) {
         trueCounter = count;
+
         if (trueCounter > 1) {
-            int opt = optionsTable.getCurrentOption();
+            final Vector2 posHit = new Vector2(x, Gdx.graphics.getHeight() - y);
+            whatDidITouch(posHit);
 
-            if (opt == OptionsTable.OFFE) {
-                optionsTable.setCurrentOption(OptionsTable.DEFE);
-                elColor[0] = 200/255f;
-                elColor[1] = 20/255f;
-                elColor[2] = 0;
-            } else if (opt == OptionsTable.DEFE) {
-                optionsTable.setCurrentOption(OptionsTable.TACT);
-                elColor[0] = 200/255f;
-                elColor[1] = 80/255f;
-                elColor[2] = 0;
-            } else if (opt == OptionsTable.TACT) {
-                optionsTable.setCurrentOption(OptionsTable.SAVE);
-                elColor[0] = 50/255f;
-                elColor[1] = 150/255f;
-                elColor[2] = 50/255f;
-            } else if (opt == OptionsTable.SAVE) {
-                optionsTable.setCurrentOption(OptionsTable.OFFE);
-                elColor[0] = 0;
-                elColor[1] = 120/255f;
-                elColor[2] = 200/255f;
+            if (btn == MENU) {
+                int opt = optionsTable.getCurrentOption();
+
+                if (opt == OptionsTable.OFFE) {
+                    optionsTable.setCurrentOption(OptionsTable.DEFE);
+                    elColor[0] = 200 / 255f;
+                    elColor[1] = 20 / 255f;
+                    elColor[2] = 0;
+                } else if (opt == OptionsTable.DEFE) {
+                    optionsTable.setCurrentOption(OptionsTable.TACT);
+                    elColor[0] = 200 / 255f;
+                    elColor[1] = 80 / 255f;
+                    elColor[2] = 0;
+                } else if (opt == OptionsTable.TACT) {
+                    optionsTable.setCurrentOption(OptionsTable.SAVE);
+                    elColor[0] = 50 / 255f;
+                    elColor[1] = 150 / 255f;
+                    elColor[2] = 50 / 255f;
+                } else if (opt == OptionsTable.SAVE) {
+                    optionsTable.setCurrentOption(OptionsTable.OFFE);
+                    elColor[0] = 0;
+                    elColor[1] = 120 / 255f;
+                    elColor[2] = 200 / 255f;
+                }
+
+                trueCounter = 0;
             }
-
-            trueCounter = 0;
         } else {
             exec.schedule(() -> {
                 if (trueCounter == 1) {
                     oneTap(x, y);
                     trueCounter = 0;
                 }
-            }, 200, TimeUnit.MILLISECONDS);
+            }, 150, TimeUnit.MILLISECONDS);
         }
 
         return false;

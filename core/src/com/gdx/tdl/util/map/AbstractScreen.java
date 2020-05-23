@@ -41,7 +41,7 @@ public abstract class AbstractScreen implements Screen {
         world.step(1/60f, 6, 2);
 
         // render do debugger
-        new Box2DDebugRenderer().render(world, camera.getCamera().combined);
+        //new Box2DDebugRenderer().render(world, camera.getCamera().combined);
 
         buildScreen(delta);
     }
