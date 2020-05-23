@@ -27,25 +27,37 @@ public class UpdatePasswordScreen extends AbstractStage {
     public void buildStage() {
         // table
         Table updPwdTable = new Table(AssetLoader.skin);
-        updPwdTable.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/2f);
-        updPwdTable.setSize(Gdx.graphics.getWidth()*4/11f, Gdx.graphics.getHeight()/2f);
+        updPwdTable.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
+        updPwdTable.setSize(Gdx.graphics.getWidth()*4/11f, Gdx.graphics.getHeight()/1.25f);
         addActor(updPwdTable);
 
         // field da password antiga
-        final TextField oldPwdTF = new TextField("", AssetLoader.skin, "login");
+        final TextField oldPwdTF = new TextField("", AssetLoader.skin, "default");
         oldPwdTF.setMessageText("old password");
-        updPwdTable.add(oldPwdTF).expand().fill();
+        oldPwdTF.setPasswordMode(true);
+        oldPwdTF.setPasswordCharacter('•');
+        updPwdTable.add(oldPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/35f);
         updPwdTable.row();
 
         // field da password nova
-        final TextField newPwdTF = new TextField("", AssetLoader.skin, "password");
+        final TextField newPwdTF = new TextField("", AssetLoader.skin, "default");
         newPwdTF.setMessageText("new password");
-        updPwdTable.add(newPwdTF).expand().fill();
+        newPwdTF.setPasswordMode(true);
+        newPwdTF.setPasswordCharacter('•');
+        updPwdTable.add(newPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         updPwdTable.row();
 
         // botao de upload
-        TextButton updPwdTB = new TextButton("Update Password", AssetLoader.skin, "menu");
-        updPwdTable.add(updPwdTB).expand().fill();
+        TextButton updPwdTB = new TextButton("Update Password", AssetLoader.skin, "default");
+        updPwdTable.add(updPwdTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
+        updPwdTable.row();
+
+        // botao de voltar atras
+        TextButton goBackTB = new TextButton("Go Back", AssetLoader.skin, "default");
+        updPwdTable.add(goBackTB);
+
+        // adicao de listeners aos botoes
+        goBackTB.addListener(ButtonUtil.createListener(ScreenEnum.LOGIN));
 
         updPwdTB.addListener(new ChangeListener() {
             @Override

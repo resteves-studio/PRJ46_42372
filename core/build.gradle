@@ -5,6 +5,7 @@ sourceCompatibility = 1.8
 dependencies {
     implementation 'pl.mk5.gdx-fireapp:gdx-fireapp-core:2.1.7'
     implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 }
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 

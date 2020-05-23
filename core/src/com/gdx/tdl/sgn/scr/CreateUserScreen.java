@@ -29,30 +29,37 @@ public class CreateUserScreen extends AbstractStage {
     @Override
     public void buildStage() {
         // table
-        Table loginTable = new Table(AssetLoader.skin);
-        loginTable.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/2f);
-        loginTable.setSize(Gdx.graphics.getWidth()*4/11f, Gdx.graphics.getHeight()/2f);
-        addActor(loginTable);
+        Table createUserTable = new Table(AssetLoader.skin);
+        createUserTable.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
+        createUserTable.setSize(Gdx.graphics.getWidth()*4/11f, Gdx.graphics.getHeight()/1.25f);
+        addActor(createUserTable);
 
         // field do email
-        final TextField mailTF = new TextField("", AssetLoader.skin, "login");
+        final TextField mailTF = new TextField("", AssetLoader.skin, "default");
         mailTF.setMessageText("e-mail");
-        loginTable.add(mailTF).expand().fill();
-        loginTable.row();
+        createUserTable.add(mailTF).expand().fill().padBottom(Gdx.graphics.getHeight()/35f);
+        createUserTable.row();
 
         // field da password
-        final TextField pswdTF = new TextField("", AssetLoader.skin, "password");
+        final TextField pswdTF = new TextField("", AssetLoader.skin, "default");
         pswdTF.setMessageText("password");
         pswdTF.setPasswordMode(true);
         pswdTF.setPasswordCharacter('•');
-        loginTable.add(pswdTF).expand().fill();
-        loginTable.row();
+        createUserTable.add(pswdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
+        createUserTable.row();
 
         // botao de upload
-        TextButton signUpTB = new TextButton("Create Account", AssetLoader.skin, "menu");
-        loginTable.add(signUpTB).expand().fill();
+        TextButton signUpTB = new TextButton("Create Account", AssetLoader.skin, "default");
+        createUserTable.add(signUpTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
+        createUserTable.row();
+
+        // botao de voltar atras
+        TextButton goBackTB = new TextButton("Go Back", AssetLoader.skin, "default");
+        createUserTable.add(goBackTB);
 
         // adicao de listeners aos botoes
+        goBackTB.addListener(ButtonUtil.createListener(ScreenEnum.LOGIN));
+
         signUpTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

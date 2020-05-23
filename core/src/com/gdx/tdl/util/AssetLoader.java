@@ -34,7 +34,8 @@ public class AssetLoader {
 
         I_login = new Texture("login.png");
         I_court = new Texture("court.png");
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("Particle Park UI.json"));
+        skin.getFont("font").getData().setScale(Gdx.graphics.getHeight()/500f);
         red = new Texture("red.png");
         redII = new Texture("redII.png");
         blue = new Texture("blue.png");
