@@ -49,7 +49,7 @@ public class CreateUserScreen extends AbstractStage {
         createUserTable.row();
 
         // botao de upload
-        TextButton signUpTB = new TextButton("Create Account", AssetLoader.skin, "default");
+        TextButton signUpTB = new TextButton("Sign Up", AssetLoader.skin, "default");
         createUserTable.add(signUpTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
         createUserTable.row();
 
@@ -64,12 +64,12 @@ public class CreateUserScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (mailTF.getText().isEmpty() || pswdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                    dialog.text("Um dos campos encontra-se em branco.\nPreencha ambos para criar conta.")
+                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para criar conta.\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else if (!validate(mailTF.getText())) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                    dialog.text("O e-mail introduzido nao e valido.")
+                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    dialog.text("\nO e-mail introduzido nao e valido\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else {
                     GdxFIRAuth.inst()
@@ -77,8 +77,8 @@ public class CreateUserScreen extends AbstractStage {
                             .then(new Consumer<GdxFirebaseUser>() {
                                 @Override
                                 public void accept(GdxFirebaseUser gdxFirebaseUser) {
-                                    Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
-                                    dialog.text("User criado! Faca login para entrar")
+                                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
+                                    dialog.text("\nUser criado! Faca login para entrar\n")
                                             .button("Obrigado(a)", true).show(CreateUserScreen.this);
                                     AssetLoader.changeScreen = true;
                                 }
@@ -86,8 +86,8 @@ public class CreateUserScreen extends AbstractStage {
                             .fail(new BiConsumer<String, Throwable>() {
                                 @Override
                                 public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                                    dialog.text("User ja existe...").button("Percebi", true).show(CreateUserScreen.this);
+                                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                                    dialog.text("\nUser ja existe...\n").button("Percebi", true).show(CreateUserScreen.this);
                                 }
                             });
                 }

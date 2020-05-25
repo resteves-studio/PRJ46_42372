@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class AssetLoader {
     public static SpriteBatch batch;
     public static Texture I_login, I_court;
-    public static Skin skin;
+    public static Skin skin, skinXP;
     public static Texture red, redII;
     public static Texture blue, blueII;
     public static Texture blueSelected, blueIISelected;
@@ -36,6 +36,8 @@ public class AssetLoader {
         I_court = new Texture("court.png");
         skin = new Skin(Gdx.files.internal("Particle Park UI.json"));
         skin.getFont("font").getData().setScale(Gdx.graphics.getHeight()/500f);
+        skinXP = new Skin(Gdx.files.internal("expee-ui.json"));
+        skinXP.getFont("font").getData().setScale(Gdx.graphics.getHeight()/400f);
         red = new Texture("red.png");
         redII = new Texture("redII.png");
         blue = new Texture("blue.png");
@@ -87,6 +89,7 @@ public class AssetLoader {
         I_login.dispose();
         I_court.dispose();
         skin.dispose();
+        skinXP.dispose();
         red.dispose();
         redII.dispose();
         blueSelected.dispose();

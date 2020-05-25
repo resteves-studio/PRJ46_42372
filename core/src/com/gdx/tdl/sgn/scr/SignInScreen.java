@@ -87,8 +87,8 @@ public class SignInScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (mailTF.getText().isEmpty() || pswdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                    dialog.text("Um dos campos encontra-se em branco.\nPreencha ambos para fazer Login.")
+                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para fazer Login.\n")
                             .button("Okay", true).show(SignInScreen.this);
                 } else {
                     GdxFIRAuth.inst()
@@ -102,8 +102,8 @@ public class SignInScreen extends AbstractStage {
                             .fail(new BiConsumer<String, Throwable>() {
                                 @Override
                                 public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                                    dialog.text("User não existe ou colocou credênciais erradas.\nTente novamente.")
+                                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                                    dialog.text("\nUser não existe ou colocou credênciais erradas.\nTente novamente.\n")
                                             .button("Okay", true).show(SignInScreen.this);
                                 }
                             });
