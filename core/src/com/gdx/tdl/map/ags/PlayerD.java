@@ -32,7 +32,7 @@ public class PlayerD extends SteeringAgent {
         sprite.draw(AssetLoader.batch);
 
         if (permissionToFollow)
-            mainTarget.getBody().setTransform(calculateTargetPosition(), mainTarget.getBody().getAngle());
+            setMainTargetPosition(calculateTargetPosition());
 
         if (body.getPosition().equals(mainTarget.getBody().getPosition()))
             steeringAcceleration.linear.setZero();
@@ -154,18 +154,21 @@ public class PlayerD extends SteeringAgent {
     // getters
     public int getNum() { return this.num; }
     public EmptyAgent getMainTarget() { return this.mainTarget; }
+    public Vector2 getMainTargetPosition() { return this.mainTarget.getBody().getPosition().cpy(); }
     PlayerO getPlayerTarget() { return this.playerTarget; }
     PlayerO getPlayerWithBall() { return this.playerWithBall; }
     EmptyAgent getBasketTarget() { return this.basketTarget; }
-    boolean getPermissionToFollow() { return this.permissionToFollow; }
+    public boolean getPermissionToFollow() { return this.permissionToFollow; }
 
     // setters
     public void setMainTarget(EmptyAgent mainTarget) { this.mainTarget = mainTarget; }
+    public void setMainTargetPosition(Vector2 pos) { this.mainTarget.getBody().setTransform(pos, mainTarget.getBody().getAngle()); }
+    public void setInitMainTargetPosition() { setMainTargetPosition(calculateTargetPosition()); }
     public void setPlayerTarget(PlayerO playerTarget) { this.playerTarget = playerTarget; }
     public void setPlayerWithBall(PlayerO playerWithBall) { this.playerWithBall = playerWithBall; }
     public void setBasketTarget(EmptyAgent basketTarget) { this.basketTarget = basketTarget; }
     public void setPermissionToFollow(boolean permissionToFollow) { this.permissionToFollow = permissionToFollow; }
-    void setPosToInitial() {
+    public void setPosToInitial() {
         this.mainTarget.getBody().setTransform(initialPos, this.body.getAngle());
         this.body.setTransform(initialPos, this.body.getAngle());
     }

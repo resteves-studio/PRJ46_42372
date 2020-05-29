@@ -12,7 +12,7 @@ import com.gdx.tdl.util.map.OptionsTable;
  * Tera a opcao de guardar a frame, reproduzir a jogada, guardar o ficheiro
  * Tera tambem o botao para o menu de ajuda
  *
- * TODO por enquanto guardar a frame, botao de ajuda
+ * TODO talvez estender de AbstractScreen e la colocar um automato entre "ecras"
  */
 class MenuScreen {
     private OptionButton[] menuOptions;

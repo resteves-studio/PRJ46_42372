@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class AbstractScreen implements Screen {
     private Box2DDebugRenderer b2dr;
-    private OrthographicCamera orthCamera;
+    OrthographicCamera orthCamera;
     private Camera camera;
 
     private ShapeRenderer shapeRenderer;
@@ -33,10 +33,6 @@ public abstract class AbstractScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // cor de fundo
-        //Gdx.gl.glClearColor(200.0f/255, 80.0f/255, 0, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // 60 fps, 6 iterations, 2 iterations
         world.step(1/60f, 6, 2);
 

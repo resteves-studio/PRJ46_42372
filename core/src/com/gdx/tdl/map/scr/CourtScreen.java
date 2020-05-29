@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.gdx.tdl.map.ags.Ball;
 import com.gdx.tdl.map.ags.EmptyAgent;
+import com.gdx.tdl.map.dlg.DialogSaveFile;
+import com.gdx.tdl.map.dlg.DialogToast;
 import com.gdx.tdl.util.map.OptionButton;
 import com.gdx.tdl.util.map.OptionsTable;
 import com.gdx.tdl.map.ags.PlayerD;
@@ -22,57 +24,66 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class CourtScreen extends AbstractScreen implements GestureDetector.GestureListener {
-    private static final int MENU   = 0;
-    private static final int FRAME  = 1;
-    private static final int RUN    = 2;
-    private static final int PASS   = 3;
-    private static final int SCREEN = 4;
-    private static final int HELP   = 5;
-
-    private static final int PLAY   = 6;
-    private static final int RESET  = 7;
-
-    private static final int MANMAN = 8;
-    private static final int ZONE   = 9;
-
-    private static final int SVFILE = 10;
-    private static final int SVPDF  = 11;
-    private static final int SVVID  = 12;
-    private static final int NOTES  = 13;
-
-    private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-
-    private float[] elColor = new float[] { 0, 120/255f, 200/255f };
-
-    private EmptyAgent basket;
-    private PlayerO[] offense;
-    private PlayerD[] defense;
-    private Ball ball;
-
-    private Tactic tactic;
-    private boolean permissionToPlay, stillPlayingMove;
-    private int flag, firstPlayerWithBall;
-
+    // opcoes de botoes existentes
+    private static final int MENU   = 0, FRAME  = 1, RUN = 2, PASS = 3, SCREEN = 4, HELP = 5;
+    private static final int PLAY   = 6, RESET  = 7;
+    private static final int MANMAN = 8, ZONE   = 9;
+    private static final int SVFILE = 10, SVPDF = 11, SVVID = 12, NOTES  = 13;
     private OptionButton[] offensiveOptions, defensiveOptions, tacticCreationOptions, saveOptions;
 
+    // dialogs
+    private static final int D_NOPLAY = 0;
+    private static final int D_FILE = 1, D_PDF = 2, D_VID = 3; // TODO notas
+    private int currentDialog = -1;
+
+    private DialogToast dialogNoPlay = new DialogToast("Sem taticas");
+    private DialogSaveFile dialogSaveFile = new DialogSaveFile("Save as File");
+
+    // timer
+    private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+    // cor de fundo
+    private float[] elColor = new float[] { 0, 120/255f, 200/255f };
+
+    // agentes
+    private PlayerO[] offense = new PlayerO[5];
+    private PlayerD[] defense = new PlayerD[5];
+    private EmptyAgent basket;
+    private Ball ball;
+
+    // tatica
+    private Tactic tactic = new Tactic();
+    private boolean permissionToPlay = false;
+    private boolean stillPlayingMove = false;
+    private int firstPlayerWithBall;
+    private int playerWithBall = 1;
+    private int flag = 5;
+
+    // ecras
     private MenuScreen menu;
     private HelpScreen help;
 
+    // gesture detector
+    private GestureDetector gestureDetector = new GestureDetector(this);
+
+    // counter do numero de taps
     private int trueCounter = 0;
 
-    private int playerWithBall;
+    // bodys dos agentes
+    private Body bodyHit = null;
+    private int bodyHitId = -1;
+    private int option = -1;
+    private int btn = -1;
 
-    private Body bodyHit;
-    private int bodyHitId, option, btn;
-    private boolean cancelSelect, isSomeoneSelected;
-    private boolean menuSelected, helpSelected;
+    // selecoes
+    private boolean isSomeoneSelected = false;
+    private boolean cancelSelect = false;
+    private boolean menuSelected = false;
+    private boolean helpSelected = false;
+
 
     public CourtScreen() {
         super();
-
-        // tatica a ser definida
-        tactic = new Tactic();
-        permissionToPlay = stillPlayingMove = false;
 
         // tabela com as opcoes ofensivas para os jogadores
         optionsTable.offensiveOptionsDraw();
@@ -88,16 +99,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         menu = new MenuScreen(world, optionsTable);
         help = new HelpScreen(world, optionsTable);
 
-        // inicializacao das variaveis de ajuda a percecao da intencao do user
-        bodyHit = null;
-        bodyHitId = option = btn = -1;
-        cancelSelect = isSomeoneSelected = false;
-
-        // variaveis auxiliares
-        flag = 5;
-        playerWithBall = 1;
-        menuSelected = helpSelected = false;
-
         //
         float playerBoundingRadius = Gdx.graphics.getWidth() / 48f;
         float ballBoundingRadius = Gdx.graphics.getWidth() / 116f;
@@ -107,10 +108,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         // inicializacao do cesto
         Vector2 posBasket = new Vector2(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()*6/7f);
         basket = new EmptyAgent(world, posBasket, basketBoundingRadius);
-
-        // inicializacao dos jogadores
-        offense = new PlayerO[5];
-        defense = new PlayerD[5];
 
         float i = 2;
         for (int n = 1; n <= 5; n++) {
@@ -188,7 +185,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             playerD.setBehaviour(behaviours);
         }
 
-        Gdx.input.setInputProcessor(new GestureDetector(this));
+        Gdx.input.setInputProcessor(gestureDetector);
     }
 
     @Override
@@ -216,6 +213,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             for (PlayerD playerD : defense) playerD.update(delta);
             ball.update(delta);
 
+            // sub-menu
             if (optionsTable.getCurrentOption() == OptionsTable.OFFE) {
                 optionsTable.update(offensiveOptions);
             } else if (optionsTable.getCurrentOption() == OptionsTable.DEFE) {
@@ -225,6 +223,27 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             } else if (optionsTable.getCurrentOption() == OptionsTable.SAVE) {
                 optionsTable.update(saveOptions);
             }
+
+            // dialogs
+            if (currentDialog == D_NOPLAY) {
+                if (dialogNoPlay.getShowing()) {
+                    dialogNoPlay.dialogStageDraw();
+                    Gdx.input.setInputProcessor(dialogNoPlay.getStage());
+                } else {
+                    Gdx.input.setInputProcessor(gestureDetector);
+                }
+            } else if (currentDialog == D_FILE) {
+                if (dialogSaveFile.getShowing()) {
+                    dialogSaveFile.dialogStageDraw();
+                    Gdx.input.setInputProcessor(dialogSaveFile.getStage());
+                } else {
+                    Gdx.input.setInputProcessor(gestureDetector);
+                }
+            } /*else if (currentDialog == SPDF) {
+
+            } else if (currentDialog == SVID) {
+
+            } // TODO notes*/
         }
     }
 
@@ -301,12 +320,10 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             offensiveOptions[btn].setIsSelected(true);
             for (OptionButton opt : offensiveOptions) {
                 if (opt == offensiveOptions[btn]) {
-                    if (btn == FRAME) {
-                        exec.schedule(() -> {
-                            opt.setIsSelected(false);
-                        }, 500, TimeUnit.MILLISECONDS);
-                    }
-                } else opt.setIsSelected(false);
+                    if (btn == FRAME)
+                        exec.schedule(() -> opt.setIsSelected(false), 500, TimeUnit.MILLISECONDS);
+                } else
+                    opt.setIsSelected(false);
             }
         } else if (curr == OptionsTable.DEFE) {
             defensiveOptions[btn].setIsSelected(true);
@@ -317,22 +334,29 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             tacticCreationOptions[btn].setIsSelected(true);
             for (OptionButton opt : tacticCreationOptions) {
                 if (opt == tacticCreationOptions[btn])
-                    exec.schedule(() -> { opt.setIsSelected(false); }, 500, TimeUnit.MILLISECONDS);
-                else opt.setIsSelected(false);
+                    exec.schedule(() -> opt.setIsSelected(false), 500, TimeUnit.MILLISECONDS);
+                else
+                    opt.setIsSelected(false);
+            }
+        } else if (curr == OptionsTable.SAVE) {
+            Gdx.app.log("SAVE", "yeah");
+            saveOptions[btn].setIsSelected(true);
+            for (OptionButton opt : saveOptions) {
+                if (opt != saveOptions[btn])
+                    opt.setIsSelected(false);
             }
         }
     }
 
     // selecciona um player
     private void tagPlayer() {
-        if ((option == PASS || option == SCREEN) && !offense[bodyHitId].hasBall())
-            return;
-        else {
+        if ( ! ((option == PASS || option == SCREEN) && !offense[bodyHitId].hasBall()) ) {
             offense[bodyHitId].setTagged(true);
             isSomeoneSelected = true;
-            for (PlayerO playerO : offense)
+            for (PlayerO playerO : offense) {
                 if (playerO != offense[bodyHitId])
                     playerO.setTagged(false);
+            }
         }
     }
 
@@ -351,15 +375,17 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     }
 
     private void reset() {
-        bodyHit   = null;
-        bodyHitId = -1;
+        for (OptionButton opt : offensiveOptions) {
+            if (opt.getIsSelected() && option != FRAME)
+                opt.setIsSelected(false);
+        }
+
         btn       = -1;
         option    = -1;
+        bodyHitId = -1;
+        bodyHit   = null;
         cancelSelect = false;
         isSomeoneSelected = false;
-
-        for (OptionButton opt : offensiveOptions)
-            opt.setIsSelected(false);
     }
 
 
@@ -376,12 +402,8 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             offense[bodyHitId].setLastMove(RUN);
             offense[bodyHitId].setHasMoved(true);
         }
-    }
 
-    // movimento de drible do atacante
-    private void playerDribble(Vector2 posHit) {
-        // TODO diferenca esta na direcao em que esta virado (pode nao dar, implementa depois)
-        // aplicar JUMP na bola
+        reset();
     }
 
     // bola passa de A para B
@@ -416,31 +438,30 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             for (PlayerD player : defense)
                 player.setPlayerWithBall(offense[bodyHitId]);
         }
+
+        reset();
     }
 
     // aplica um bloqueio ao defensor do colega
     private void doAScreen() {
         // TODO caso se consiga implementar o collision avoid
+
+        reset();
     }
 
     // aplica a acao correspondente ao atacante
     private void playerAction(Vector2 posHit) {
         switch (option) {
             case RUN:
-                if (bodyHit == null) {
+                if (bodyHit == null)
                     playerRun(posHit);
-                    reset();
-                }
                 break;
             case PASS:
-                if (bodyHit != null) {
+                if (bodyHit != null)
                     passTheBall();
-                    reset();
-                }
                 break;
             case SCREEN:
                 doAScreen();
-                reset();
                 break;
         }
     }
@@ -458,25 +479,38 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 tactic.addInitialPos(d, posInit);
                 if (offense[d].hasBall()) firstPlayerWithBall = d;
             }
+
+            for (int d = 0; d < defense.length; d++) {
+                defense[d].setPlayerWithBall(offense[firstPlayerWithBall]);
+                defense[d].setInitMainTargetPosition();
+                Vector2 posInit = defense[d].getMainTargetPosition();
+                tactic.addInitialPos(d+5, posInit);
+            }
+
             tactic.setToBegin();
         }
 
         // adicionada nova frame a lista
         else {
             int size = tactic.getSize();
+
             for (int d = size; d < offense.length + size; d++) {
                 Integer[] moves = new Integer[] { offense[d % 5].getLastMove(), offense[d % 5].getReceiver() };
                 tactic.addToMovements(d, moves, offense[d % 5].getTarget().getBody().getPosition().cpy());
                 offense[d % 5].setLastMove(-1);
                 offense[d % 5].setReceiver(-1);
             }
+
             tactic.setNFrames(tactic.getNFrames() + 1);
         }
 
         // da permissao aos defesas para seguir os atacantes
-        /*if (!defense[0].getPermissionToFollow())
+        if (!defense[0].getPermissionToFollow()) {
             for (PlayerD player : defense)
-                player.setPermissionToFollow(true);*/
+                player.setPermissionToFollow(true);
+        }
+
+        reset();
     }
 
     // aplica o movimento durante a reproducao da jogada
@@ -493,6 +527,8 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
         playerAction(tactic.getEntryValue(f));
 
+        reset();
+
         waitTime(1);
     }
 
@@ -504,7 +540,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 stillPlayingMove = true;
 
                 for (int f = flag - 5; f < flag; f++) {
-                    System.out.println("Fez");
                     applyMove(f, tactic.getEntryKey(f)[0], tactic.getEntryKey(f)[1]);
                 }
 
@@ -519,9 +554,9 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             if (tactic.getNFrames() <= 0) {
                 permissionToPlay = false;
                 stillPlayingMove = false;
+                reset();
             }
-        }
-        // TODO pop up no ecra com a info de que nao existe nada para reproduzir
+        } else reset();
     }
 
     // limpa a tatica atual
@@ -541,7 +576,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
         for (PlayerD playerD : defense) {
             playerD.setPermissionToFollow(false);
-            playerD.setAtPosition(playerD.getInitialPos());
+            playerD.setPosToInitial();
             playerD.setPlayerWithBall(offense[firstPlayerWithBall]);
         }
 
@@ -591,16 +626,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         }
     }
 
-    private void oneTap(float x, float y) {
-        final Vector2 posHit = new Vector2(x, Gdx.graphics.getHeight() - y);
-
-        // primeiro ve no que tocou
-        whatDidITouch(posHit);
-
+    private void oneTap(Vector2 posHit) {
         // verifica se foi um botao novo
         if (option != btn) {
             option = buttonHit();
-            tagButton(); // TODO CHECK
+            tagButton();
 
             // reproducao da tatica
             if (option == PLAY && tactic.getSize() > 0) {
@@ -610,16 +640,21 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 flag = 5;
 
                 // coloca players e bola na posicao inicial
-                for (int p = 0; p < tactic.initialPos.length; p++) {
+                for (int p = 0; p < tactic.initialPos.length/2; p++) {
                     Vector2 init = tactic.initialPos[p];
                     offense[p].setTargetPosition(init);
                     offense[p].setAtPosition(init);
+                }
+                for (int p = tactic.initialPos.length/2; p < tactic.initialPos.length; p++) {
+                    Vector2 init = tactic.initialPos[p];
+                    defense[p-5].setMainTargetPosition(init);
+                    defense[p-5].setAtPosition(init);
                 }
 
                 // posse de bola no inicio da jogada
                 offense[firstPlayerWithBall].setHasBall(true);
                 ball.setPlayerToFollow(offense[firstPlayerWithBall].getTarget());
-                ball.setAtPosition(offense[firstPlayerWithBall].getTarget().getPosition());
+                ball.setAtPosition(ball.getInitialPos());
                 for (PlayerO player : offense)
                     if (!player.equals(offense[firstPlayerWithBall]))
                         player.setHasBall(false);
@@ -628,24 +663,37 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
                 // da permissao para reproduzir a jogada
                 permissionToPlay = true;
+            } else if (option == PLAY && !permissionToPlay) {
+                currentDialog = D_NOPLAY;
+                dialogNoPlay.setShowing(true);
+                reset();
             }
 
             // adicao de uma nova frame
-            if (option == FRAME) addNewFrame();
+            else if (option == FRAME) addNewFrame();
 
             // limpeza da tatica
-            if (option == RESET) resetTactic();
+            else if (option == RESET) resetTactic();
 
             // caso o botao seja para mudar de ecra
-            if (option == MENU) {
+            /*else if (option == MENU) {
                 menuSelected = !menuSelected;
                 helpSelected = false;
                 reset();
-            } else if (option == HELP) {
+            } else */if (option == HELP) {
                 helpSelected = !helpSelected;
                 menuSelected = false;
                 reset();
             }
+
+            else if (option == SVFILE) {
+                Gdx.app.log("OPTION", "save");
+                currentDialog = D_FILE;
+                dialogSaveFile.setShowing(true);
+                reset();
+            }
+
+            // TODO resto dos botoes
 
             return;
         }
@@ -672,12 +720,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
     @Override
     public boolean tap(float x, float y, int count, int button) {
+        final Vector2 posHit = new Vector2(x, Gdx.graphics.getHeight() - y);
+        whatDidITouch(posHit);
         trueCounter = count;
 
-        if (trueCounter > 1) {
-            final Vector2 posHit = new Vector2(x, Gdx.graphics.getHeight() - y);
-            whatDidITouch(posHit);
-
+        if (trueCounter == 2) {
             if (btn == MENU) {
                 int opt = optionsTable.getCurrentOption();
 
@@ -704,14 +751,16 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 }
 
                 trueCounter = 0;
+
+                reset();
             }
         } else {
             exec.schedule(() -> {
                 if (trueCounter == 1) {
-                    oneTap(x, y);
+                    oneTap(posHit);
                     trueCounter = 0;
                 }
-            }, 150, TimeUnit.MILLISECONDS);
+            }, 160, TimeUnit.MILLISECONDS);
         }
 
         return false;
@@ -733,6 +782,9 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     @Override
     public void dispose() {
         super.dispose();
+        dialogNoPlay.dispose();
+        dialogSaveFile.dispose();
+        // TODO verificar os que estao por colocar aqui
     }
 
     @Override // TODO Maybe usar para definir posicoes iniciais dos jogadores?
