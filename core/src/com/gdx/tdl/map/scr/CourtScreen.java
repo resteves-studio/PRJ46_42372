@@ -228,14 +228,12 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             if (currentDialog == D_NOPLAY) {
                 if (dialogNoPlay.getShowing()) {
                     dialogNoPlay.dialogStageDraw();
-                    Gdx.input.setInputProcessor(dialogNoPlay.getStage());
                 } else {
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
             } else if (currentDialog == D_FILE) {
                 if (dialogSaveFile.getShowing()) {
                     dialogSaveFile.dialogStageDraw();
-                    Gdx.input.setInputProcessor(dialogSaveFile.getStage());
                 } else {
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
@@ -665,7 +663,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 permissionToPlay = true;
             } else if (option == PLAY && !permissionToPlay) {
                 currentDialog = D_NOPLAY;
+
+                dialogNoPlay.dialogDraw();
                 dialogNoPlay.setShowing(true);
+
+                Gdx.input.setInputProcessor(dialogNoPlay.getStage());
                 reset();
             }
 
@@ -687,9 +689,12 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             }
 
             else if (option == SVFILE) {
-                Gdx.app.log("OPTION", "save");
                 currentDialog = D_FILE;
+
+                dialogSaveFile.dialogDraw();
                 dialogSaveFile.setShowing(true);
+
+                Gdx.input.setInputProcessor(dialogSaveFile.getStage());
                 reset();
             }
 

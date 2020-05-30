@@ -4,32 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.gdx.tdl.util.AssetLoader;
 
 public abstract class AbstractDialog {
     boolean showing = false;
     Dialog dialog;
+    String header;
     Stage stage;
 
     public AbstractDialog(String header) {
         this.stage = new Stage();
-
-        dialog = new Dialog(header, AssetLoader.skinXP, "dialog") {
-            @Override
-            protected void result(Object object) {
-                dialogResult();
-            }
-        };
+        this.header = header;
 
         dialogDraw();
     }
 
     // abstract methods
     protected abstract void dialogDraw();
-    protected abstract void dialogResult();
+    protected abstract void dialogResult(Object object);
 
     public void dialogStageDraw() {
-        Gdx.gl.glClearColor(150/255f, 150/255f, 150/255f, 0f);
+        Gdx.gl.glClearColor(150/255f, 150/255f, 150/255f, 255f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.draw();
