@@ -2,7 +2,6 @@ package com.gdx.tdl.map.dlg;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -11,22 +10,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gdx.tdl.map.tct.Tactic;
 import com.gdx.tdl.util.AssetLoader;
 
-public class DialogSaveFile extends AbstractDialog {
+public class DialogLoadFile extends AbstractDialog {
 
-    public DialogSaveFile(Tactic tactic) {
+    public DialogLoadFile(Tactic tactic) {
         super(tactic);
     }
 
     @Override
     public void dialogDraw() {
-        // tabela do TF
+        // tabela da label
         Table tableA = new Table(AssetLoader.skinXP);
         tableA.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*4/5f);
         tableA.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
         stage.addActor(tableA);
 
         // textfield
-        final Label titleL = new Label("Save File", AssetLoader.skinXP, "title");
+        final Label titleL = new Label("Load File", AssetLoader.skinXP, "title");
         tableA.add(titleL);
 
         // tabela do TF
@@ -42,45 +41,32 @@ public class DialogSaveFile extends AbstractDialog {
 
         // tabela dos botoes
         Table tableC = new Table(AssetLoader.skinXP);
-        tableC.setPosition(Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/8f);
-        tableC.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()/3f);
+        tableC.setPosition(Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/5f);
+        tableC.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()/4f);
         stage.addActor(tableC);
 
         // botoes
-        TextButton localTB = new TextButton("Local", AssetLoader.skinXP);
+        TextButton localTB = new TextButton("From Local", AssetLoader.skinXP);
         tableC.add(localTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
         tableC.row();
-        TextButton cloudTB = new TextButton("Cloud", AssetLoader.skinXP);
+        TextButton cloudTB = new TextButton("From Cloud", AssetLoader.skinXP);
         tableC.add(cloudTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
-        tableC.row();
-        TextButton bothTB = new TextButton("Both", AssetLoader.skinXP);
-        tableC.add(bothTB).expand().fill();
         tableC.row();
         TextButton cancelTB = new TextButton("Cancel", AssetLoader.skinXP);
         tableC.add(cancelTB).expand().fill().padTop(Gdx.graphics.getHeight()/20f);
-
 
         // listeners
         localTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                saveLocal(nameTF.getText().trim());
+                loadLocal(nameTF.getText().trim());
             }
         });
 
         cloudTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                saveCloud(nameTF.getText().trim());
-            }
-        });
-
-        bothTB.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                String name = nameTF.getText().trim();
-                saveLocal(name);
-                saveCloud(name);
+                loadCloud(nameTF.getText().trim());
             }
         });
 
@@ -92,15 +78,17 @@ public class DialogSaveFile extends AbstractDialog {
         });
     }
 
-    private void saveLocal(String name) {
+    private void loadLocal(String name) {
         if (!name.isEmpty())
             saveLoad.getTactic().setName(name);
-        saveLoad.saveData();
+
+        saveLoad.loadData();
+        setTacticLoaded(true);
 
         showing = false;
     }
 
-    private void saveCloud(String name) {
+    private void loadCloud(String name) {
         // TODO
 
         showing = false;

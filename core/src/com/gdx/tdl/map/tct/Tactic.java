@@ -68,7 +68,7 @@ public class Tactic {
     public int getNFrames() { return nFrames; }
 
     // setters
-    void setName(String name) { this.name = name; }
+    public void setName(String name) { this.name = name; }
     public void setToBegin() { this.nFrames = 0; }
     public void setNFrames(int nFrames) { this.nFrames = nFrames; }
     public void cleanMovements() { movements.clear(); }

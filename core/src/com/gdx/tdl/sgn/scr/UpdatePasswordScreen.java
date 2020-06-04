@@ -36,7 +36,7 @@ public class UpdatePasswordScreen extends AbstractStage {
         final TextField oldPwdTF = new TextField("", AssetLoader.skin, "default");
         oldPwdTF.setMessageText("old password");
         oldPwdTF.setPasswordMode(true);
-        oldPwdTF.setPasswordCharacter('•');
+        oldPwdTF.setPasswordCharacter('*');
         updPwdTable.add(oldPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/35f);
         updPwdTable.row();
 
@@ -44,7 +44,7 @@ public class UpdatePasswordScreen extends AbstractStage {
         final TextField newPwdTF = new TextField("", AssetLoader.skin, "default");
         newPwdTF.setMessageText("new password");
         newPwdTF.setPasswordMode(true);
-        newPwdTF.setPasswordCharacter('•');
+        newPwdTF.setPasswordCharacter('*');
         updPwdTable.add(newPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         updPwdTable.row();
 
@@ -58,43 +58,36 @@ public class UpdatePasswordScreen extends AbstractStage {
         updPwdTable.add(goBackTB);
 
         // adicao de listeners aos botoes
-        goBackTB.addListener(ButtonUtil.createListener(ScreenEnum.LOGIN));
+        goBackTB.addListener(ButtonUtil.createListener(ScreenEnum.COURT));
 
         updPwdTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println(AssetLoader.changeScreen + "WTF");
                 if (oldPwdTF.getText().isEmpty() || newPwdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
+                    Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
                     dialog.text("Um dos campos encontra-se em branco.\nPreencha ambos para atualizar password.")
                             .button("Percebi", true).show(UpdatePasswordScreen.this);
                 } else {
                     GdxFIRAuth.inst()
                             .signInWithEmailAndPassword(GdxFIRAuth.instance().getCurrentUser().getUserInfo().getEmail(),
                                     oldPwdTF.getText().toCharArray())
-                            .then(new Consumer<GdxFirebaseUser>() {
-                                @Override
-                                public void accept(GdxFirebaseUser gdxFirebaseUser) {
-                                    GdxFIRAuth.instance().getCurrentUser().updatePassword(newPwdTF.getText().toCharArray());
-                                    Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
-                                    dialog.text("Password alterada!")
-                                            .button("Obrigado(a)", true).show(UpdatePasswordScreen.this);
-                                    //AssetLoader.changeScreen = true;
-                                }
+                            .then(gdxFirebaseUser -> {
+                                GdxFIRAuth.instance().getCurrentUser().updatePassword(newPwdTF.getText().toCharArray());
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
+                                dialog.text("Password alterada!")
+                                        .button("Obrigado(a)", true).show(UpdatePasswordScreen.this);
+                                //AssetLoader.changeScreen = true;
                             })
-                            .fail(new BiConsumer<String, Throwable>() {
-                                @Override
-                                public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("Erro", AssetLoader.skin, "dialog");
-                                    dialog.text("Password antiga errada. Tente novamente.")
-                                            .button("Percebi", true).show(UpdatePasswordScreen.this);
-                                }
+                            .fail((s, throwable) -> {
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
+                                dialog.text("Password antiga errada. Tente novamente.")
+                                        .button("Percebi", true).show(UpdatePasswordScreen.this);
                             });
                 }
 
                 if (AssetLoader.changeScreen) {
                     AssetLoader.changeScreen = false;
-                    StageManager.getInstance().showScreen(ScreenEnum.LOGIN);
+                    StageManager.getInstance().showScreen(ScreenEnum.COURT);
                 }
             }
         });

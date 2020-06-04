@@ -5,16 +5,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.gdx.tdl.util.AssetLoader;
 
 public class DialogToast extends AbstractDialog {
-    public DialogToast(String header) {
-        super(header);
+
+    public DialogToast() {
+        super(null);
     }
 
     @Override
     public void dialogDraw() {
-        dialog = new Dialog(header, AssetLoader.skinXP, "dialog") {
+        dialog = new Dialog("Sem taticas", AssetLoader.skinXP, "dialog") {
             @Override
             protected void result(Object object) {
-                dialogResult(object);
+                dialog.remove();
+                showing = false;
             }
         };
 
@@ -25,11 +27,5 @@ public class DialogToast extends AbstractDialog {
         dialog.setPosition(Gdx.graphics.getWidth()/2f - dialog.getWidth()/2f, Gdx.graphics.getHeight()/2f - dialog.getHeight()/2f);
 
         addDialogToStage();
-    }
-
-    @Override
-    protected void dialogResult(Object object) {
-        dialog.remove();
-        showing = false;
     }
 }

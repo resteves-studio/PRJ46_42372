@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.gdx.tdl.map.ags.Ball;
 import com.gdx.tdl.map.ags.EmptyAgent;
+import com.gdx.tdl.map.dlg.DialogIntro;
+import com.gdx.tdl.map.dlg.DialogLoadFile;
 import com.gdx.tdl.map.dlg.DialogSaveFile;
 import com.gdx.tdl.map.dlg.DialogToast;
 import com.gdx.tdl.util.map.OptionButton;
@@ -28,16 +30,8 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     private static final int MENU   = 0, FRAME  = 1, RUN = 2, PASS = 3, SCREEN = 4, HELP = 5;
     private static final int PLAY   = 6, RESET  = 7;
     private static final int MANMAN = 8, ZONE   = 9;
-    private static final int SVFILE = 10, SVPDF = 11, SVVID = 12, NOTES  = 13;
+    private static final int SVFILE = 10, LDFILE = 11, NOTES = 12;//SVPDF = 11, SVVID = 12, NOTES  = 13;
     private OptionButton[] offensiveOptions, defensiveOptions, tacticCreationOptions, saveOptions;
-
-    // dialogs
-    private static final int D_NOPLAY = 0;
-    private static final int D_FILE = 1, D_PDF = 2, D_VID = 3; // TODO notas
-    private int currentDialog = -1;
-
-    private DialogToast dialogNoPlay = new DialogToast("Sem taticas");
-    private DialogSaveFile dialogSaveFile = new DialogSaveFile("Save as File");
 
     // timer
     private ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
@@ -58,6 +52,15 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     private int firstPlayerWithBall;
     private int playerWithBall = 1;
     private int flag = 5;
+
+    // dialogs
+    private static final int D_NOPLAY = 0, D_FILE = 1, D_UPLD = 2, D_NOTE = 3; // TODO load e notas
+    private int currentDialog = D_NOPLAY;
+
+    private DialogIntro dialogIntro = new DialogIntro();
+    private DialogToast dialogNoPlay = new DialogToast();
+    private DialogSaveFile dialogSaveFile = new DialogSaveFile(tactic);
+    private DialogLoadFile dialogLoadFile = new DialogLoadFile(tactic);
 
     // ecras
     private MenuScreen menu;
@@ -225,23 +228,36 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             }
 
             // dialogs
-            if (currentDialog == D_NOPLAY) {
-                if (dialogNoPlay.getShowing()) {
+            if (dialogIntro.isShowing()) {
+                dialogIntro.dialogStageDraw();
+                Gdx.input.setInputProcessor(dialogIntro.getStage());
+            } else if (currentDialog == D_NOPLAY) {
+                if (dialogNoPlay.isShowing()) {
                     dialogNoPlay.dialogStageDraw();
                 } else {
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
             } else if (currentDialog == D_FILE) {
-                if (dialogSaveFile.getShowing()) {
+                if (dialogSaveFile.isShowing()) {
                     dialogSaveFile.dialogStageDraw();
                 } else {
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
-            } /*else if (currentDialog == SPDF) {
+            } else if (currentDialog == D_UPLD) { // TODO load
+                if (dialogLoadFile.isShowing()) {
+                    dialogLoadFile.dialogStageDraw();
+                } else {
+                    if (dialogLoadFile.wasTacticLoaded()) {
+                        this.tactic = dialogLoadFile.getTacticFromSL();
+                        dialogLoadFile.setTacticLoaded(false);
+                    }
+                    Gdx.input.setInputProcessor(gestureDetector);
+                }
+            } /*else if (currentDialog == D_NOTE) {   // TODO notas
 
-            } else if (currentDialog == SVID) {
-
-            } // TODO notes*/
+            }*/ else {
+                Gdx.input.setInputProcessor(gestureDetector);
+            }
         }
     }
 
@@ -299,10 +315,11 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 if (btn == 4) return HELP;
             } else if (opt == OptionsTable.SAVE) {
                 if (btn == 1) return SVFILE;
-                if (btn == 2) return SVPDF;
-                if (btn == 3) return SVVID;
-                if (btn == 4) return NOTES;
-                if (btn == 5) return HELP;
+                if (btn == 2) return LDFILE;
+                //if (btn == 2) return SVPDF;
+                //if (btn == 3) return SVVID;
+                if (btn == 3) return NOTES;
+                if (btn == 4) return HELP;
             }
 
         } else if (btn == 0) return HELP;
@@ -698,7 +715,19 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 reset();
             }
 
-            // TODO resto dos botoes
+            else if (option == LDFILE) { // TODO load
+                currentDialog = D_UPLD;
+
+                dialogLoadFile.dialogDraw();
+                dialogLoadFile.setShowing(true);
+
+                Gdx.input.setInputProcessor(dialogLoadFile.getStage());
+                reset();
+            }
+
+            /*else if (option == NOTES) {   // TODO notas
+
+            }*/
 
             return;
         }

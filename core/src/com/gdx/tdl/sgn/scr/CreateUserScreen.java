@@ -45,7 +45,7 @@ public class CreateUserScreen extends AbstractStage {
         final TextField pswdTF = new TextField("", AssetLoader.skin, "default");
         pswdTF.setMessageText("password");
         pswdTF.setPasswordMode(true);
-        pswdTF.setPasswordCharacter('•');
+        pswdTF.setPasswordCharacter('*');
         createUserTable.add(pswdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         createUserTable.row();
 
@@ -65,11 +65,11 @@ public class CreateUserScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (mailTF.getText().isEmpty() || pswdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
                     dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para criar conta.\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else if (!validate(mailTF.getText())) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
                     dialog.text("\nO e-mail introduzido nao e valido\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else {
@@ -87,7 +87,7 @@ public class CreateUserScreen extends AbstractStage {
                             .fail(new BiConsumer<String, Throwable>() {
                                 @Override
                                 public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
                                     dialog.text("\nUser ja existe...\n").button("Percebi", true).show(CreateUserScreen.this);
                                 }
                             });

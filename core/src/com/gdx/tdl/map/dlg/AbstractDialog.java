@@ -4,23 +4,30 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.gdx.tdl.map.tct.SaveLoad;
+import com.gdx.tdl.map.tct.Tactic;
 
 public abstract class AbstractDialog {
-    boolean showing = false;
+    SaveLoad saveLoad;
+    Tactic tactic;
     Dialog dialog;
-    String header;
     Stage stage;
 
-    public AbstractDialog(String header) {
+    boolean showing, wasTacticLoaded;
+
+    public AbstractDialog(Tactic tactic) {
         this.stage = new Stage();
-        this.header = header;
+        this.tactic = tactic;
+        this.saveLoad = new SaveLoad(tactic);
+
+        setShowing(false);
+        setTacticLoaded(false);
 
         dialogDraw();
     }
 
     // abstract methods
     protected abstract void dialogDraw();
-    protected abstract void dialogResult(Object object);
 
     public void dialogStageDraw() {
         Gdx.gl.glClearColor(150/255f, 150/255f, 150/255f, 255f);
@@ -34,10 +41,13 @@ public abstract class AbstractDialog {
     }
 
     // ----- getters -----
-    public boolean getShowing() { return this.showing; }
+    public boolean isShowing() { return this.showing; }
+    public boolean wasTacticLoaded() { return this.wasTacticLoaded; }
     public Stage getStage() { return this.stage; }
+    public Tactic getTacticFromSL() { return this.saveLoad.getTactic(); }
 
     // ----- setters -----
     public void setShowing(boolean showing) { this.showing = showing; }
-    void addDialogToStage() { this.stage.addActor(dialog); }
+    public void setTacticLoaded(boolean wasTacticLoaded) { this.wasTacticLoaded = wasTacticLoaded; }
+    public void addDialogToStage() { this.stage.addActor(dialog); }
 }

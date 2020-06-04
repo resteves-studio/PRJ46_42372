@@ -65,7 +65,7 @@ public class SignInScreen extends AbstractStage {
         final TextField pswdTF = new TextField("", AssetLoader.skin, "default");
         pswdTF.setMessageText("password");
         pswdTF.setPasswordMode(true);
-        pswdTF.setPasswordCharacter('•');
+        pswdTF.setPasswordCharacter('*');
         loginTable.add(pswdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/17.5f);
         loginTable.row();
 
@@ -87,25 +87,17 @@ public class SignInScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (mailTF.getText().isEmpty() || pswdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
+                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
                     dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para fazer Login.\n")
                             .button("Okay", true).show(SignInScreen.this);
                 } else {
                     GdxFIRAuth.inst()
                             .signInWithEmailAndPassword(mailTF.getText(), pswdTF.getText().toCharArray())
-                            .then(new Consumer<GdxFirebaseUser>() {
-                                @Override
-                                public void accept(GdxFirebaseUser gdxFirebaseUser) {
-                                    AssetLoader.changeScreen = true;
-                                }
-                            })
-                            .fail(new BiConsumer<String, Throwable>() {
-                                @Override
-                                public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("Erro", AssetLoader.skinXP, "dialog");
-                                    dialog.text("\nUser não existe ou colocou credênciais erradas.\nTente novamente.\n")
-                                            .button("Okay", true).show(SignInScreen.this);
-                                }
+                            .then(gdxFirebaseUser -> AssetLoader.changeScreen = true)
+                            .fail((s, throwable) -> {
+                                Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
+                                dialog.text("\nUser não existe ou colocou credênciais erradas.\nTente novamente.\n")
+                                        .button("Okay", true).show(SignInScreen.this);
                             });
                 }
 

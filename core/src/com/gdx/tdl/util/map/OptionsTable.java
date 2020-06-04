@@ -21,7 +21,7 @@ public class OptionsTable {
         this.offensiveOptions = new OptionButton[6];
         this.defensiveOptions = new OptionButton[4];
         this.tacticOptions = new OptionButton[5];
-        this.saveOptions = new OptionButton[6];
+        this.saveOptions = new OptionButton[5];
         this.menuOptions = new OptionButton[2];
         this.helpOptions = new OptionButton[1];
 
@@ -39,8 +39,8 @@ public class OptionsTable {
 
     public void defensiveOptionsDraw() {
         defensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
-        defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3.5f/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
-        defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2f/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
+        defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
+        defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
         defensiveOptions[3] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
     }
 
@@ -53,12 +53,13 @@ public class OptionsTable {
     }
 
     public void saveOptionsDraw() {
-        saveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
+        saveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5f/6f, AssetLoader.menuOption);
         saveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.saveFile);
-        saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.savePDF);
-        saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.saveVideo);
-        saveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.notes);
-        saveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+        saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.loadFile);
+        saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.notes);
+        saveOptions[4] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+        //saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.savePDF);
+        //saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.saveVideo);
     }
 
     public void menuOptionsDraw(World world) {

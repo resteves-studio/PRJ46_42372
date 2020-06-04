@@ -18,7 +18,7 @@ public class AssetLoader {
     public static Texture check;
     public static Texture play, plus, reset;
     public static Texture playSelected, plusSelected, resetSelected;
-    public static Texture saveFile, savePDF, saveVideo, notes;
+    public static Texture saveFile, loadFile, notes;//savePDF, saveVideo, notes;
     public static Texture menuOption, helpOption;
     public static Texture runOption, dribleOption, passOption, screenOption;
     public static Texture runSelectedOption, dribleSelectedOption, passSelectedOption, screenSelectedOption;
@@ -38,6 +38,7 @@ public class AssetLoader {
         skin.getFont("font").getData().setScale(Gdx.graphics.getHeight()/500f);
         skinXP = new Skin(Gdx.files.internal("expee-ui.json"));
         skinXP.getFont("font").getData().setScale(Gdx.graphics.getHeight()/400f);
+        skinXP.getFont("title").getData().setScale(Gdx.graphics.getHeight()/175f);
         red = new Texture("red.png");
         redII = new Texture("redII.png");
         blue = new Texture("blue.png");
@@ -54,8 +55,9 @@ public class AssetLoader {
         plusSelected = new Texture("plusSelected.png");
         resetSelected = new Texture("resetSelected.png");
         saveFile = new Texture("saveFile.png");
-        savePDF = new Texture("savePDF.png");
-        saveVideo = new Texture("saveVideo.png");
+        loadFile = new Texture("loadFile.png");
+        //savePDF = new Texture("savePDF.png");
+        //saveVideo = new Texture("saveVideo.png");
         notes = new Texture("notes.png");
         menuOption = new Texture("menu.png");
         helpOption = new Texture("help.png");
@@ -106,8 +108,9 @@ public class AssetLoader {
         plusSelected.dispose();
         resetSelected.dispose();
         saveFile.dispose();
-        savePDF.dispose();
-        saveVideo.dispose();
+        loadFile.dispose();
+        //savePDF.dispose();
+        //saveVideo.dispose();
         notes.dispose();
         menuOption.dispose();
         helpOption.dispose();
