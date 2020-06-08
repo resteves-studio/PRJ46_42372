@@ -16,9 +16,10 @@ import com.gdx.tdl.util.map.EntityLocation;
 import com.gdx.tdl.util.map.SteeringUtils;
 
 public abstract class SteeringAgent implements Steerable<Vector2> {
-    public static final short BIT_PLAYER = 1;
-    public static final short BIT_EMPTY  = 2;
-    public static final short BIT_BALL   = 3;
+    public static final short BIT_EMPTY  = -1;
+    public static final short BIT_NOBODY =  0;
+    public static final short BIT_PLAYER =  1;
+    public static final short BIT_BALL   =  2;
 
     private float maxLinearSpeed, maxLinearAcceleration;
     private float maxAngularSpeed, maxAngularAcceleration;

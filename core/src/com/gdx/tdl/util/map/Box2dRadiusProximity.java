@@ -18,11 +18,16 @@ public class Box2dRadiusProximity extends Box2dSquareAABBProximity {
 
     @SuppressWarnings("unchecked")
     protected Steerable<Vector2> getSteerable (Fixture fixture) {
+        Object userData = fixture.getBody().getUserData();
+        if (userData instanceof EmptyAgent || userData instanceof Ball || userData instanceof OptionButton)
+            return null;
         return (Steerable<Vector2>) fixture.getBody().getUserData();
     }
 
     @Override
     protected boolean accept (Steerable<Vector2> steerable) {
+        if (steerable == null) return false;
+
         // The bounding radius of the current body is taken into account
         // by adding it to the radius proximity
         float range = detectionRadius + steerable.getBoundingRadius();

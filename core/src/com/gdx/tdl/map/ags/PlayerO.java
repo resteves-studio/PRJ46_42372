@@ -47,7 +47,7 @@ public class PlayerO extends SteeringAgent {
 
 
     @Override public short isCattegory() { return BIT_PLAYER; }
-    @Override public short collidesWith() { return BIT_PLAYER | BIT_BALL; }
+    @Override public short collidesWith() { return BIT_PLAYER; }
 
 
     // getters

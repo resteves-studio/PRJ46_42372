@@ -5,19 +5,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.gdx.tdl.map.tct.Tactic;
 import com.gdx.tdl.util.AssetLoader;
 import com.gdx.tdl.util.ScreenEnum;
-import com.gdx.tdl.util.sgn.ButtonUtil;
 import com.gdx.tdl.util.sgn.StageManager;
 
 public class DialogIntro extends AbstractDialog {
+    protected boolean load;
 
     public DialogIntro() {
         super(null);
         this.showing = true;
+        this.load = false;
     }
 
     @Override
@@ -60,7 +59,7 @@ public class DialogIntro extends AbstractDialog {
         loadTacticTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO
+                setShowing(false);
             }
         });
 

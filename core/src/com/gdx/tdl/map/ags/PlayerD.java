@@ -42,7 +42,7 @@ public class PlayerD extends SteeringAgent {
         // se o seu player tiver a bola, fica entre ele e o cesto
         if (getPlayerTarget().hasBall()) {
             Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerTarget().getPosition().cpy()).nor();
-            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(3.5f * getBoundingRadius(), 3.5f * getBoundingRadius()));
+            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(3.75f * getBoundingRadius(), 3.75f * getBoundingRadius()));
             return new Vector2(v.x, v.y);
         }
 
@@ -65,13 +65,13 @@ public class PlayerD extends SteeringAgent {
             // ver distanica entre os jogadores ou o angulo em si
             // criar um "peso" para saber o quao perto do cesto ele fica
             // retornar vetor com essa nova posicao
-            float per = 3*(-180/thetaInv); // TODO melhorar o per
+            float per = 4.5f * (-180 / thetaInv); // TODO melhorar o per
             Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerTarget().getPosition().cpy()).nor();
             Vector2 v = getBasketTarget().getPosition().cpy().add(u.scl(per*getBoundingRadius(), per*getBoundingRadius()));
             return new Vector2(v.x, v.y);
-        } else if (thetaInv <= 25) {
+        } else if (thetaInv < 45) {
             Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerTarget().getPosition().cpy()).nor();
-            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(4f * getBoundingRadius(), 4f * getBoundingRadius()));
+            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(3.5f * getBoundingRadius(), 3.5f * getBoundingRadius()));
             return new Vector2(v.x, v.y);
         }
 
@@ -81,10 +81,10 @@ public class PlayerD extends SteeringAgent {
         Circle c13 = new Circle();
         Circle c23 = new Circle();
 
-        /* calculados os centros desses circulos    TODO remover o12, o13, o23 se nao for necessario
-             o12 - centro do circulo entre jogador e bola
-             o13 - centro do circulo entre jogador e cesto
-             o23 - centro do circulo entre bola e cesto
+        /* calculados os centros desses circulos
+            > o12 - centro do circulo entre jogador e bola
+            > o13 - centro do circulo entre jogador e cesto
+            > o23 - centro do circulo entre bola e cesto
          */
         int[] angles = getAngles(thetaInv);
         c12.findCircleCenter(p1, p2, angles[0], p3);
@@ -122,25 +122,21 @@ public class PlayerD extends SteeringAgent {
         return new Vector2(p0.getX(), p0.getY());
     }
 
-    // adapta os angulos conforme a posicao dos jogadores TODO melhorar
+    // adapta os angulos conforme a posicao dos jogadores TODO melhorar e ver escolha dos centros dos circulos
     private int[] getAngles(float theta) {
         int[] angles = new int[3];
 
-        if (theta >= 80 && theta <= 90) {
+        if (theta >= 70 && theta < 90) {
             angles[0] = 120;
             angles[1] = 120;
             angles[2] = 120;
-        } else if (theta >= 60 && theta < 80) {
-            angles[0] = 135;
-            angles[1] = 120;
-            angles[2] = 105;
-        } else if (theta >= 40 && theta < 60) {
-            angles[0] = 150;
-            angles[1] = 110;
+        } else if (theta >= 50 && theta < 70) {
+            angles[0] = 130;
+            angles[1] = 130;
             angles[2] = 100;
-        } else if (theta < 40) {
-            angles[0] = 160;
-            angles[1] = 105;
+        } else if (theta >= 30 && theta < 50) {
+            angles[0] = 135;
+            angles[1] = 130;
             angles[2] = 95;
         }
 
@@ -149,7 +145,7 @@ public class PlayerD extends SteeringAgent {
 
 
     @Override public short isCattegory() { return BIT_PLAYER; }
-    @Override public short collidesWith() { return BIT_PLAYER | BIT_BALL; }
+    @Override public short collidesWith() { return BIT_PLAYER; }
 
     // getters
     public int getNum() { return this.num; }

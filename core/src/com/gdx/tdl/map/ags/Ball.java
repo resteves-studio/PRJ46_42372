@@ -34,7 +34,7 @@ public class Ball extends SteeringAgent {
 
 
     @Override public short isCattegory() { return BIT_BALL; }
-    @Override public short collidesWith() { return BIT_PLAYER; }
+    @Override public short collidesWith() { return BIT_NOBODY; }
 
     // getters
     public EmptyAgent getTarget() { return target; }

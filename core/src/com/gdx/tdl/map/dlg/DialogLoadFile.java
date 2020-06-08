@@ -60,6 +60,7 @@ public class DialogLoadFile extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 loadLocal(nameTF.getText().trim());
+                // TODO aviso pop up
             }
         });
 
@@ -67,6 +68,7 @@ public class DialogLoadFile extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 loadCloud(nameTF.getText().trim());
+                // TODO aviso pop up
             }
         });
 

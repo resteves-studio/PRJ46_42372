@@ -3,6 +3,7 @@ package com.gdx.tdl.map.scr;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.steer.behaviors.Arrive;
 import com.badlogic.gdx.ai.steer.behaviors.BlendedSteering;
+import com.badlogic.gdx.ai.steer.behaviors.CollisionAvoidance;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
@@ -141,19 +142,13 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     .setDecelerationRadius(playerBoundingRadius * 4)
                     .setEnabled(true);
 
-            /*Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerO, world, playerO.getBoundingRadius()*1.5f);
-            CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerO, proximity);
-
-            LookWhereYouAreGoing<Vector2> lwyag = new LookWhereYouAreGoing<>(playerO)
-                .setTimeToTarget(0.01f)
-                .setAlignTolerance(50f)
-                .setDecelerationRadius(playerO.getBoundingRadius())
-                .setTarget(basket);*/
+            Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerO, world, playerO.getBoundingRadius()*3f);
+            CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerO, proximity); // TODO empty a abanar o player
+            collisionAvoid.setEnabled(true);
 
             BlendedSteering<Vector2> behaviours = new BlendedSteering<>(playerO)
-                    .add(arriveBO, 1f);
-            //.add(collisionAvoid, 1f)
-            //.add(lwyag, 1f);
+                    .add(arriveBO, 1f)
+                    .add(collisionAvoid, 1f);
 
             playerO.setBehaviour(behaviours);
         }
@@ -171,19 +166,12 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     .setDecelerationRadius(playerBoundingRadius * 4)
                     .setEnabled(true);
 
-            /*Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerD, world, playerD.getBoundingRadius()*1.5f);
+            Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerD, world, playerD.getBoundingRadius()*1.5f);
             CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerD, proximity);
 
-            LookWhereYouAreGoing<Vector2> lwyag = new LookWhereYouAreGoing<>(playerD)
-                    .setTimeToTarget(0.01f)
-                    .setAlignTolerance(10f)
-                    .setDecelerationRadius(playerD.getBoundingRadius())
-                    .setTarget(offense[playerD.getNum()-1]);*/
-
             BlendedSteering<Vector2> behaviours = new BlendedSteering<>(playerD)
-                    .add(arriveBD, 1f);
-            //.add(collisionAvoid, 1f)
-            //.add(lwyag, 1f);
+                    .add(arriveBD, 1f)
+                    .add(collisionAvoid, 1f);
 
             playerD.setBehaviour(behaviours);
         }
@@ -243,7 +231,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 } else {
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
-            } else if (currentDialog == D_UPLD) { // TODO load
+            } else if (currentDialog == D_UPLD) {
                 if (dialogLoadFile.isShowing()) {
                     dialogLoadFile.dialogStageDraw();
                 } else {
@@ -669,7 +657,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 // posse de bola no inicio da jogada
                 offense[firstPlayerWithBall].setHasBall(true);
                 ball.setPlayerToFollow(offense[firstPlayerWithBall].getTarget());
-                ball.setAtPosition(ball.getInitialPos());
+                ball.setAtPosition(offense[firstPlayerWithBall].getInitialPos());
                 for (PlayerO player : offense)
                     if (!player.equals(offense[firstPlayerWithBall]))
                         player.setHasBall(false);

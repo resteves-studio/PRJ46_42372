@@ -14,7 +14,7 @@ public class EmptyAgent extends SteeringAgent {
     public short isCattegory() { return BIT_EMPTY; }
 
     @Override
-    public short collidesWith() { return 0; }
+    public short collidesWith() { return BIT_NOBODY; }
 
     @Override
     public void agentDraw() {
