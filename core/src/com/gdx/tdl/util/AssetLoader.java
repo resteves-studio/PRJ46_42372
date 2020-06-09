@@ -25,7 +25,7 @@ public class AssetLoader {
     public static Texture manToManOption, zone23Option;
     public static Texture manToManSelectedOption, zone23SelectedOption;
     public static Texture goback;
-    //public static Texture one, two, three, four, five;
+    public static Texture one, two, three, four, five;
     public static BitmapFont font;
     public static boolean changeScreen;
 
@@ -74,11 +74,11 @@ public class AssetLoader {
         manToManSelectedOption = new Texture("mantomanSelected.png");
         zone23SelectedOption = new Texture("zona23Selected.png");
         goback = new Texture("goback.png");
-        /*one = new Texture("1.png");
+        one = new Texture("1.png");
         two = new Texture("2.png");
         three = new Texture("3.png");
         four = new Texture("4.png");
-        five = new Texture("5.png");*/
+        five = new Texture("5.png");
 
         font = new BitmapFont(Gdx.files.internal("normal.fnt"), false);
         font.getData().setScale(Gdx.graphics.getWidth()/800f);
@@ -127,11 +127,11 @@ public class AssetLoader {
         manToManSelectedOption.dispose();
         zone23SelectedOption.dispose();
         goback.dispose();
-        /*one.dispose();
+        one.dispose();
         two.dispose();
         three.dispose();
         four.dispose();
-        five.dispose();*/
+        five.dispose();
         font.dispose();
     }
 

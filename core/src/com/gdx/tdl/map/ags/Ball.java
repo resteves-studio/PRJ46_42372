@@ -21,7 +21,7 @@ public class Ball extends SteeringAgent {
         sprite.draw(AssetLoader.batch);
 
         Vector2 u = basket.getPosition().cpy().sub(playerTarget.getPosition().cpy()).nor();
-        Vector2 v = playerTarget.getPosition().cpy().add(u.scl(4f * getBoundingRadius(), 4f * getBoundingRadius()));
+        Vector2 v = playerTarget.getPosition().cpy().add(u.scl(2f * getBoundingRadius(), 2f * getBoundingRadius()));
         target.getBody().setTransform(v, target.getBody().getAngle());
 
         float tx = Math.abs(body.getPosition().x - target.getBody().getPosition().x);

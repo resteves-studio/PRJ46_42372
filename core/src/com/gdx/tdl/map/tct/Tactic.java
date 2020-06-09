@@ -31,7 +31,7 @@ public class Tactic {
     int nFrames;
 
     public Tactic() {
-        DateFormat dateFormat = new SimpleDateFormat("ddMMHHmm");
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyyHHmm");
         String strDate = dateFormat.format(new Date(TimeUtils.millis()));
 
         this.name = "tactic" + strDate;

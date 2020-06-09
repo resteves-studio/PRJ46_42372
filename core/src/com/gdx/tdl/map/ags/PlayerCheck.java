@@ -27,6 +27,6 @@ public class PlayerCheck extends SteeringAgent {
         sprite.draw(AssetLoader.batch);
     }
 
-    @Override public short isCattegory() { return 0; }
-    @Override public short collidesWith() { return 0; }
+    @Override public short isCattegory() { return BIT_NOBODY; }
+    @Override public short collidesWith() { return BIT_NOBODY; }
 }

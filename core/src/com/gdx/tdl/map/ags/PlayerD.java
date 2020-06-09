@@ -42,7 +42,7 @@ public class PlayerD extends SteeringAgent {
         // se o seu player tiver a bola, fica entre ele e o cesto
         if (getPlayerTarget().hasBall()) {
             Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerTarget().getPosition().cpy()).nor();
-            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(3.75f * getBoundingRadius(), 3.75f * getBoundingRadius()));
+            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(4f * getBoundingRadius(), 4f * getBoundingRadius()));
             return new Vector2(v.x, v.y);
         }
 
@@ -71,7 +71,7 @@ public class PlayerD extends SteeringAgent {
             return new Vector2(v.x, v.y);
         } else if (thetaInv < 45) {
             Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerTarget().getPosition().cpy()).nor();
-            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(3.5f * getBoundingRadius(), 3.5f * getBoundingRadius()));
+            Vector2 v = getPlayerTarget().getPosition().cpy().add(u.scl(4f * getBoundingRadius(), 4f * getBoundingRadius()));
             return new Vector2(v.x, v.y);
         }
 

@@ -81,10 +81,8 @@ public class DialogLoadFile extends AbstractDialog {
     }
 
     private void loadLocal(String name) {
-        if (!name.isEmpty())
-            saveLoad.getTactic().setName(name);
-
-        saveLoad.loadData();
+        // TODO
+        saveLoad.loadLocalData();
         setTacticLoaded(true);
 
         showing = false;
@@ -92,6 +90,8 @@ public class DialogLoadFile extends AbstractDialog {
 
     private void loadCloud(String name) {
         // TODO
+        saveLoad.loadCloudData();
+        //setTacticLoaded(true);
 
         showing = false;
     }

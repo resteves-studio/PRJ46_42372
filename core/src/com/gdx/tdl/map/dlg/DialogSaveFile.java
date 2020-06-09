@@ -93,15 +93,19 @@ public class DialogSaveFile extends AbstractDialog {
     }
 
     private void saveLocal(String name) {
+        // TODO
         if (!name.isEmpty())
             saveLoad.getTactic().setName(name);
-        saveLoad.saveData();
+        saveLoad.saveLocalData();
 
         showing = false;
     }
 
     private void saveCloud(String name) {
         // TODO
+        if (!name.isEmpty())
+            saveLoad.getTactic().setName(name);
+        saveLoad.saveCloudData();
 
         showing = false;
     }

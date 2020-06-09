@@ -26,10 +26,8 @@ public class PlayerO extends SteeringAgent {
 
     @Override
     public void agentDraw() {
-        if (hasBall)
-            sprite.setRegion(isTagged() ? AssetLoader.blueSelected : AssetLoader.blue);
-        else
-            sprite.setRegion(isTagged() ? AssetLoader.blueIISelected : AssetLoader.blueII);
+        if (hasBall) { sprite.setRegion(isTagged() ? AssetLoader.blueSelected : AssetLoader.blue); }
+        else { sprite.setRegion(isTagged() ? AssetLoader.blueIISelected : AssetLoader.blueII); }
 
         if (hasMoved) {
             check.setPosition(body.getPosition().cpy());

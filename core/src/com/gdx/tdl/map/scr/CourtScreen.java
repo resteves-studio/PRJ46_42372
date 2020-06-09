@@ -43,6 +43,8 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     // agentes
     private PlayerO[] offense = new PlayerO[5];
     private PlayerD[] defense = new PlayerD[5];
+    private PlayerNumber[] offenseNs = new PlayerNumber[5];
+    private PlayerNumber[] defenseNs = new PlayerNumber[5];
     private EmptyAgent basket;
     private Ball ball;
 
@@ -117,8 +119,10 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         for (int n = 1; n <= 5; n++) {
             Vector2 posO = new Vector2(Gdx.graphics.getWidth()*i/10f, Gdx.graphics.getHeight()/10f);
             offense[n-1] = new PlayerO(world, posO, playerBoundingRadius, n == 1, n);
+            offenseNs[n-1] = new PlayerNumber(world, posO, playerBoundingRadius, n, BodyDef.BodyType.DynamicBody);
             Vector2 posD = new Vector2(Gdx.graphics.getWidth()*i/10f,Gdx.graphics.getHeight()*9/10f);
             defense[n-1] = new PlayerD(world, posD, playerBoundingRadius, n);
+            defenseNs[n-1] = new PlayerNumber(world, posD, playerBoundingRadius, n, BodyDef.BodyType.DynamicBody);
             i += 1.75f;
         }
 
@@ -143,7 +147,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     .setEnabled(true);
 
             Box2dRadiusProximity proximity = new Box2dRadiusProximity(playerO, world, playerO.getBoundingRadius()*3f);
-            CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerO, proximity); // TODO empty a abanar o player
+            CollisionAvoidance<Vector2> collisionAvoid = new CollisionAvoidance<>(playerO, proximity);
             collisionAvoid.setEnabled(true);
 
             BlendedSteering<Vector2> behaviours = new BlendedSteering<>(playerO)
@@ -203,6 +207,16 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             for (PlayerO playerO : offense) playerO.update(delta);
             for (PlayerD playerD : defense) playerD.update(delta);
             ball.update(delta);
+
+            // agents numbers
+            for (int n = 0; n < offenseNs.length; n++) {
+                offenseNs[n].setPosition(offense[n].getPosition().cpy());
+                offenseNs[n].update(delta);
+            }
+            for (int n = 0; n < defenseNs.length; n++) {
+                defenseNs[n].setPosition(defense[n].getPosition().cpy());
+                defenseNs[n].update(delta);
+            }
 
             // sub-menu
             if (optionsTable.getCurrentOption() == OptionsTable.OFFE) {
@@ -342,7 +356,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     opt.setIsSelected(false);
             }
         } else if (curr == OptionsTable.SAVE) {
-            Gdx.app.log("SAVE", "yeah");
+            Gdx.app.log("SAVE/LOAD", "yeah");
             saveOptions[btn].setIsSelected(true);
             for (OptionButton opt : saveOptions) {
                 if (opt != saveOptions[btn])
