@@ -30,7 +30,7 @@ public abstract class AbstractDialog {
     protected abstract void dialogDraw();
 
     public void dialogStageDraw() {
-        Gdx.gl.glClearColor(150/255f, 150/255f, 150/255f, 255f);
+        Gdx.gl.glClearColor(100/255f, 100/255f, 100/255f, 255f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.draw();

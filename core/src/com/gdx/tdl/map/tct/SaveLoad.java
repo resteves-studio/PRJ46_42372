@@ -16,7 +16,9 @@ public class SaveLoad {
     public SaveLoad(Tactic tactic) {
         if (tactic != null) {
             setTactic(tactic);
-            setFileHandle(tactic.getName() + ".json");
+            setFileHandle(Gdx.files.getLocalStoragePath() + "/" + tactic.getName() + "/" + tactic.getName() + ".json");
+            //setFileHandle("C:/Desktop/filole.json");
+            Gdx.app.log("PATH", fileHandle.path());
         }
 
         GdxFIRAuth.instance()
@@ -27,6 +29,8 @@ public class SaveLoad {
 
     public void saveLocalData() {
         if (tactic != null) {
+            setFileHandle(Gdx.files.getLocalStoragePath() + "/" + tactic.getName() + "/" + tactic.getName() + ".json");
+            //setFileHandle("C:/Desktop/filole.json");
             fileHandle.writeString(Base64Coder.encodeString(json.prettyPrint(tactic)), false);
             Gdx.app.log("SAVED TO", "Local");
         } else {
@@ -36,34 +40,58 @@ public class SaveLoad {
     }
 
     public void saveCloudData() {
-        GdxFIRStorage.instance()
-                .upload(fileHandle.path(), fileHandle)
-                .after(GdxFIRAuth.instance().getCurrentUserPromise())
-                .then(fileMetadata -> { Gdx.app.log("SAVED TO", "Cloud"); })
-                .fail((s, throwable) -> {
-                    Gdx.app.log("NOT SAVED TO", "Cloud");
-                    // TODO dialog a informar do sucedido
-                });
+        if (tactic != null) {
+            setFileHandle(Gdx.files.getLocalStoragePath() + "/" + tactic.getName() + "/" + tactic.getName() + ".json");
+            //setFileHandle("C:/Desktop/filole.json");
+            fileHandle.writeString(Base64Coder.encodeString(json.prettyPrint(tactic)), false);
+
+            if (fileHandle.exists()) {
+                GdxFIRStorage.instance()
+                        .upload(fileHandle.path(), fileHandle)
+                        .after(GdxFIRAuth.instance().getCurrentUserPromise())
+                        .then(fileMetadata -> {
+                            Gdx.app.log("SAVED TO", "Cloud");
+                        })
+                        .fail((s, throwable) -> {
+                            Gdx.app.log("NOT SAVED TO", "Cloud");
+                            // TODO dialog a informar do sucedido
+                        });
+            }
+        } else {
+            // TODO dialog a informar do sucedido
+        }
     }
 
     public void loadLocalData() {
-        tactic = json.fromJson(Tactic.class, Base64Coder.decodeString(fileHandle.readString()));
-        Gdx.app.log("LOADED FROM", "Local");
+        if (fileHandle.exists()) {
+            setFileHandle(Gdx.files.getLocalStoragePath() + "/" + tactic.getName() + "/" + tactic.getName() + ".json");
+            //setFileHandle("C:/Desktop/filole.json");
+            tactic = json.fromJson(Tactic.class, Base64Coder.decodeString(fileHandle.readString()));
+            Gdx.app.log("LOADED FROM", "Local");
+        } else {
+            // TODO dialog a informar do sucedido
+        }
     }
 
     public void loadCloudData() {
-        GdxFIRStorage.instance()
-                .download(fileHandle.path(), fileHandle)
-                .after(GdxFIRAuth.instance().getCurrentUserPromise())
-                .then(fileMetadata -> {
-                    Gdx.app.log("LOADED FROM", "Cloud");
-                    // TODO guardar a tatica
-                })
+        setFileHandle(Gdx.files.getLocalStoragePath() + "/" + tactic.getName() + "/" + tactic.getName() + ".json");
+        //setFileHandle("C:/Desktop/filole.json");
+        if (fileHandle.exists()) {
+            GdxFIRStorage.instance()
+                    .download(fileHandle.path(), fileHandle)
+                    .after(GdxFIRAuth.instance().getCurrentUserPromise())
+                    .then(fileMetadata -> {
+                        Gdx.app.log("LOADED FROM", "Cloud");
+                        // TODO guardar a tatica
+                    })
 
-                .fail((s, throwable) -> {
-                    Gdx.app.log("NOT SAVED TO", "Cloud");
-                    // TODO dialog a informar do sucedido
-                });
+                    .fail((s, throwable) -> {
+                        Gdx.app.log("NOT SAVED TO", "Cloud");
+                        // TODO dialog a informar do sucedido
+                    });
+        } else {
+            // TODO dialog a informar do sucedido
+        }
     }
 
     // ----- getters -----

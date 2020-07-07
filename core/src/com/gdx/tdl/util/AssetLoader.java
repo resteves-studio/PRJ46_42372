@@ -16,7 +16,7 @@ public class AssetLoader {
     public static Texture ball;
     public static Texture empty;
     public static Texture check;
-    public static Texture play, plus, reset;
+    public static Texture play, plus, plusO, reset;
     public static Texture playSelected, plusSelected, resetSelected;
     public static Texture saveFile, loadFile, notes;//savePDF, saveVideo, notes;
     public static Texture menuOption, helpOption;
@@ -50,6 +50,7 @@ public class AssetLoader {
         check = new Texture("check.png");
         play = new Texture("play.png");
         plus = new Texture("plus.png");
+        plusO = new Texture("plusO.png");
         reset = new Texture("reset.png");
         playSelected = new Texture("playSelected.png");
         plusSelected = new Texture("plusSelected.png");
@@ -103,6 +104,7 @@ public class AssetLoader {
         check.dispose();
         play.dispose();
         plus.dispose();
+        plusO.dispose();
         reset.dispose();
         playSelected.dispose();
         plusSelected.dispose();

@@ -30,7 +30,7 @@ public class OptionsTable {
 
     public void offensiveOptionsDraw() {
         offensiveOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption);
-        offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.plus, AssetLoader.plusSelected);
+        offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.plusO, AssetLoader.plusSelected);
         offensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.runOption, AssetLoader.runSelectedOption);
         offensiveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.passOption, AssetLoader.passSelectedOption);
         offensiveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.screenOption, AssetLoader.screenSelectedOption);

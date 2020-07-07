@@ -96,8 +96,8 @@ public class DialogSaveFile extends AbstractDialog {
         // TODO
         if (!name.isEmpty())
             saveLoad.getTactic().setName(name);
-        saveLoad.saveLocalData();
 
+        saveLoad.saveLocalData();
         showing = false;
     }
 
@@ -105,8 +105,8 @@ public class DialogSaveFile extends AbstractDialog {
         // TODO
         if (!name.isEmpty())
             saveLoad.getTactic().setName(name);
-        saveLoad.saveCloudData();
 
+        saveLoad.saveCloudData();
         showing = false;
     }
 }

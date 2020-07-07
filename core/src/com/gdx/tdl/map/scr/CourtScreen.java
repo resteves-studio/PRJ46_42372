@@ -64,6 +64,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     private DialogToast dialogNoPlay = new DialogToast();
     private DialogSaveFile dialogSaveFile = new DialogSaveFile(tactic);
     private DialogLoadFile dialogLoadFile = new DialogLoadFile(tactic);
+    private DialogNotes dialogNotes = new DialogNotes(tactic);
 
     // ecras
     private MenuScreen menu;
@@ -255,10 +256,12 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     }
                     Gdx.input.setInputProcessor(gestureDetector);
                 }
-            } /*else if (currentDialog == D_NOTE) {   // TODO notas
-
-            }*/ else {
-                Gdx.input.setInputProcessor(gestureDetector);
+            } else if (currentDialog == D_NOTE) {   // TODO notas
+                if (dialogNotes.isShowing()) {
+                    dialogNotes.dialogStageDraw();
+                } else {
+                    Gdx.input.setInputProcessor(gestureDetector);
+                }
             }
         }
     }
@@ -714,7 +717,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 dialogSaveFile.setShowing(true);
 
                 Gdx.input.setInputProcessor(dialogSaveFile.getStage());
-                reset();
+                //reset();
             }
 
             else if (option == LDFILE) { // TODO load
@@ -724,12 +727,17 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 dialogLoadFile.setShowing(true);
 
                 Gdx.input.setInputProcessor(dialogLoadFile.getStage());
-                reset();
+                //reset();
             }
 
-            /*else if (option == NOTES) {   // TODO notas
+            else if (option == NOTES) {   // TODO notas
+                currentDialog = D_NOTE;
 
-            }*/
+                dialogNotes.dialogDraw();
+                dialogNotes.setShowing(true);
+
+                Gdx.input.setInputProcessor(dialogNotes.getStage());
+            }
 
             return;
         }
@@ -766,8 +774,8 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
                 if (opt == OptionsTable.OFFE) {
                     optionsTable.setCurrentOption(OptionsTable.DEFE);
-                    elColor[0] = 200 / 255f;
-                    elColor[1] = 20 / 255f;
+                    elColor[0] = 180 / 255f;
+                    elColor[1] = 18 / 255f;
                     elColor[2] = 0;
                 } else if (opt == OptionsTable.DEFE) {
                     optionsTable.setCurrentOption(OptionsTable.TACT);
