@@ -38,6 +38,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		}
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		up: button
+		down: button-pressed
+		over: button-hover
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
 		up: button
@@ -178,6 +185,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: font
 		fontColor: black
+		up: button
+		down: button-pressed
+		over: button-hover
+	}
+	option: {
+		font: font
+		fontColor: white
 		up: button
 		down: button-pressed
 		over: button-hover
