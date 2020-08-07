@@ -7,13 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.gdx.tdl.map.tct.SaveLoad;
 import com.gdx.tdl.map.tct.Tactic;
 import com.gdx.tdl.util.AssetLoader;
 
 public class DialogLoadFile extends AbstractDialog {
 
-    public DialogLoadFile(Tactic tactic) {
-        super(tactic);
+    public DialogLoadFile(SaveLoad saveLoad) {
+        super(saveLoad);
     }
 
     @Override
@@ -60,7 +61,6 @@ public class DialogLoadFile extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 loadLocal(nameTF.getText().trim());
-                // TODO aviso pop up
             }
         });
 
@@ -68,14 +68,15 @@ public class DialogLoadFile extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 loadCloud(nameTF.getText().trim());
-                // TODO aviso pop up
             }
         });
 
         cancelTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                showing = false;
+                setFail(false);
+                setSuccess(false);
+                setShowing(false);
             }
         });
     }
@@ -83,16 +84,17 @@ public class DialogLoadFile extends AbstractDialog {
     private void loadLocal(String name) {
         // TODO
         saveLoad.loadLocalData();
-        setTacticLoaded(true);
-
-        showing = false;
+        setShowing(false);
     }
 
     private void loadCloud(String name) {
         // TODO
         saveLoad.loadCloudData();
-        //setTacticLoaded(true);
+        setShowing(false);
+    }
 
-        showing = false;
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }

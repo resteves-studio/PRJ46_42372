@@ -63,12 +63,12 @@ public class OptionsTable {
     }
 
     public void menuOptionsDraw(World world) {
-        menuOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption, "Menu", Gdx.graphics.getHeight()/300f);
-        menuOptions[1] = new OptionButton(world, 0, 0, AssetLoader.helpOption, "Help", Gdx.graphics.getHeight()/300f);
+        menuOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption, "", Gdx.graphics.getHeight()/300f);
+        menuOptions[1] = new OptionButton(world, 0, 0, AssetLoader.helpOption, "", Gdx.graphics.getHeight()/300f);
     }
 
     public void helpOptionsDraw(World world) {
-        helpOptions[0]  = new OptionButton(world, 0, 0, AssetLoader.goback, AssetLoader.runSelectedOption, "Go Back", Gdx.graphics.getHeight()/400f);
+        helpOptions[0]  = new OptionButton(world, 0, 0, AssetLoader.goback, AssetLoader.runSelectedOption, "Voltar", Gdx.graphics.getHeight()/400f);
     }
 
     public void update(OptionButton[] options) {

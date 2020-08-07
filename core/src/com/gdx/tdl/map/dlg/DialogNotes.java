@@ -1,4 +1,4 @@
-package com.mov.ags;
+package com.gdx.tdl.map.dlg;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -6,12 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.gdx.tdl.map.tct.SaveLoad;
+import com.gdx.tdl.util.AssetLoader;
 
 public class DialogNotes extends AbstractDialog {
 
-    public DialogNotes(Tactic tactic) {
-        super(tactic);
+    public DialogNotes(SaveLoad saveLoad) {
+        super(saveLoad);
     }
 
     @Override
@@ -23,8 +26,17 @@ public class DialogNotes extends AbstractDialog {
         stage.addActor(tableB);
 
         // text area
-        final TextArea notesTA = new TextArea("", AssetLoader.skinXP);
+        final TextArea notesTA = new TextArea(saveLoad.getTactic().getNotes(), AssetLoader.skinXP);
+        final StringBuilder strBuilder = new StringBuilder();
         notesTA.setMessageText(" notes");
+        notesTA.setTextFieldListener(new TextField.TextFieldListener() { // TODO resolver problema da newline
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (c == '\t') {
+                    notesTA.setMessageText(strBuilder.append("\n").toString());
+                }
+            }
+        });
         tableB.add(notesTA).expand().fill();
 
         /*/ scroll panel
@@ -50,13 +62,16 @@ public class DialogNotes extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 // TODO
+                tactic.setNotes(notesTA.getText());
+                Gdx.app.log("NOTES", tactic.getNotes());
+                setShowing(false);
             }
         });
 
         cancelTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                showing = false;
+                setShowing(false);
             }
         });
     }

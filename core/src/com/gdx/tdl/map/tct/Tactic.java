@@ -27,7 +27,7 @@ import java.util.Map;
 public class Tactic {
     HashMap<Integer, Map.Entry<Integer[], Vector2>> movements;
     public Vector2[] initialPos;
-    String name;
+    String name, notes;
     int nFrames;
 
     public Tactic() {
@@ -35,6 +35,7 @@ public class Tactic {
         String strDate = dateFormat.format(new Date(TimeUtils.millis()));
 
         this.name = "tactic" + strDate;
+        this.notes = "";
         this.movements = new HashMap<>();
         this.initialPos = new Vector2[10];
         this.nFrames = -1;
@@ -58,17 +59,29 @@ public class Tactic {
         initialPos[p] = pos;
     }
 
+    public boolean isInitPosEmpty() {
+        for (int i = 0; i < getInitialPosLength(); i++) {
+            if (getInitialPos(i) == null)
+                return true;
+        }
+        return false;
+    }
+
     // getters
+    public Vector2 getInitialPos(int i) { return initialPos[i]; }
     HashMap<Integer, Map.Entry<Integer[], Vector2>> getMovements() { return movements; }
     Map.Entry<Integer[], Vector2> getEntry(int player) { return movements.get(player); }
-    public Vector2 getEntryValue(int player) { return getEntry(player).getValue(); }
     public Integer[] getEntryKey(int player) { return getEntry(player).getKey(); }
-    String getName() { return this.name; }
+    public Vector2 getEntryValue(int player) { return getEntry(player).getValue(); }
+    public int getInitialPosLength() { return initialPos.length; }
     public int getSize() { return movements.size(); }
+    String getName() { return this.name; }
+    public String getNotes() { return this.notes; }
     public int getNFrames() { return nFrames; }
 
     // setters
     public void setName(String name) { this.name = name; }
+    public void setNotes(String notes) { this.notes = notes; }
     public void setToBegin() { this.nFrames = 0; }
     public void setNFrames(int nFrames) { this.nFrames = nFrames; }
     public void cleanMovements() { movements.clear(); }

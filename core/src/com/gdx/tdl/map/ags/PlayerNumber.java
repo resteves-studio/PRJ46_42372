@@ -3,39 +3,42 @@ package com.gdx.tdl.map.ags;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gdx.tdl.util.AssetLoader;
 
 public class PlayerNumber extends SteeringAgent {
     float boundingRadius;
+    String numColor;
     Vector2 pos;
     int num;
 
-    PlayerNumber(World world, Vector2 pos, float boundingRadius, int num, BodyDef.BodyType bodyType) {
+    public PlayerNumber(World world, Vector2 pos, float boundingRadius, int num, BodyDef.BodyType bodyType, String numColor) {
         super(world, pos, boundingRadius, bodyType);
 
         this.boundingRadius = boundingRadius * 1.25f;
+        this.numColor = numColor;
         this.pos = pos;
         this.num = num;
     }
 
-    void setPosition(Vector2 pos) { this.pos = pos; }
+    public void setPosition(Vector2 pos) { this.pos = pos; }
 
     @Override
     public void agentDraw() {
         switch (num) {
             case 1:
-                sprite.setRegion(AssetLoader.one);
+                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteOne : AssetLoader.darkOne);
                 break;
             case 2:
-                sprite.setRegion(AssetLoader.two);
+                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteTwo : AssetLoader.darkTwo);
                 break;
             case 3:
-                sprite.setRegion(AssetLoader.three);
+                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteThree : AssetLoader.darkThree);
                 break;
             case 4:
-                sprite.setRegion(AssetLoader.four);
+                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteFour : AssetLoader.darkFour);
                 break;
             case 5:
-                sprite.setRegion(AssetLoader.five);
+                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteFive : AssetLoader.darkFive);
                 break;
         }
         sprite.setSize(boundingRadius, boundingRadius);
@@ -46,4 +49,7 @@ public class PlayerNumber extends SteeringAgent {
 
     @Override public short isCattegory() { return BIT_NOBODY; }
     @Override public short collidesWith() { return BIT_NOBODY; }
+
+    // setters
+    public void setNumColor(String numColor) { this.numColor = numColor; }
 }

@@ -13,15 +13,13 @@ public abstract class AbstractDialog {
     Dialog dialog;
     Stage stage;
 
-    boolean showing, wasTacticLoaded;
+    boolean showing;
 
-    public AbstractDialog(Tactic tactic) {
+    public AbstractDialog(SaveLoad saveLoad) {
         this.stage = new Stage();
-        this.tactic = tactic;
-        this.saveLoad = new SaveLoad(tactic);
+        this.saveLoad = saveLoad;
 
         setShowing(false);
-        setTacticLoaded(false);
 
         dialogDraw();
     }
@@ -42,12 +40,14 @@ public abstract class AbstractDialog {
 
     // ----- getters -----
     public boolean isShowing() { return this.showing; }
-    public boolean wasTacticLoaded() { return this.wasTacticLoaded; }
+    public boolean isFail() { return this.saveLoad.isFail(); }
+    public boolean isSuccess() { return this.saveLoad.isSuccess(); }
     public Stage getStage() { return this.stage; }
-    public Tactic getTacticFromSL() { return this.saveLoad.getTactic(); }
+    public Tactic getTacticFromSaveLoad() { return this.saveLoad.getTactic(); }
 
     // ----- setters -----
     public void setShowing(boolean showing) { this.showing = showing; }
-    public void setTacticLoaded(boolean wasTacticLoaded) { this.wasTacticLoaded = wasTacticLoaded; }
+    public void setFail(boolean fail) { this.saveLoad.setFail(fail); }
+    public void setSuccess(boolean success) { this.saveLoad.setSuccess(success); }
     public void addDialogToStage() { this.stage.addActor(dialog); }
 }

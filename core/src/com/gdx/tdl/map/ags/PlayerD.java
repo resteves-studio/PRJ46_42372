@@ -1,6 +1,7 @@
 package com.gdx.tdl.map.ags;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -12,13 +13,15 @@ public class PlayerD extends SteeringAgent {
     private PlayerO playerTarget, playerWithBall;
     private EmptyAgent basketTarget, mainTarget;
     private boolean permissionToFollow;
+    private String playerColor;
     private Ball ballTarget;
     private int num;
 
-    public PlayerD(World world, Vector2 pos, float boundingRadius, int num) {
+    public PlayerD(World world, Vector2 pos, float boundingRadius, int num, String playerColor) {
         super(world, pos, boundingRadius, BodyDef.BodyType.DynamicBody);
 
         this.num = num;
+        this.playerColor = playerColor;
         this.permissionToFollow = false;
     }
 
@@ -27,8 +30,8 @@ public class PlayerD extends SteeringAgent {
     public void agentDraw() {
         sprite.setRotation(body.getAngle() * 180 / (float) Math.PI);
         sprite.setPosition(body.getPosition().cpy().x - sprite.getWidth()/2, body.getPosition().cpy().y - sprite.getHeight()/2);
-        if (playerTarget.hasBall()) sprite.setRegion(AssetLoader.red);
-        else sprite.setRegion(AssetLoader.redII);
+        if (playerTarget.hasBall()) sprite.setRegion(playerColor());
+        else sprite.setRegion(playerIIColor());
         sprite.draw(AssetLoader.batch);
 
         if (permissionToFollow)
@@ -36,6 +39,41 @@ public class PlayerD extends SteeringAgent {
 
         if (body.getPosition().equals(mainTarget.getBody().getPosition()))
             steeringAcceleration.linear.setZero();
+    }
+
+    private Texture playerColor() {
+        switch (this.playerColor) {
+            case "Laranja":  return AssetLoader.orange;
+            case "Escuro":   return AssetLoader.dark;
+            case "Verde":    return AssetLoader.green;
+            case "Azul":     return AssetLoader.blue;
+            case "Vermelho": return AssetLoader.red;
+            case "Amarelo":  return AssetLoader.yellow;
+            default:         return AssetLoader.light;
+        }
+    }
+
+    private Texture playerIIColor() {
+        switch (this.playerColor) {
+            case "Laranja":  return AssetLoader.orangeII;
+            case "Escuro":   return AssetLoader.darkII;
+            case "Verde":    return AssetLoader.greenII;
+            case "Azul":     return AssetLoader.blueII;
+            case "Vermelho": return AssetLoader.redII;
+            case "Amarelo":  return AssetLoader.yellowII;
+            default:         return AssetLoader.lightII;
+        }
+    }
+
+    public String numberColor() {
+        switch (this.playerColor) {
+            case "Laranja":
+            case "Amarelo":
+            case "Claro":
+                return "Dark";
+            default:
+                return "White";
+        }
     }
 
     private Vector2 calculateTargetPosition() {
@@ -160,6 +198,7 @@ public class PlayerD extends SteeringAgent {
     public void setMainTarget(EmptyAgent mainTarget) { this.mainTarget = mainTarget; }
     public void setMainTargetPosition(Vector2 pos) { this.mainTarget.getBody().setTransform(pos, mainTarget.getBody().getAngle()); }
     public void setInitMainTargetPosition() { setMainTargetPosition(calculateTargetPosition()); }
+    public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }
     public void setPlayerTarget(PlayerO playerTarget) { this.playerTarget = playerTarget; }
     public void setPlayerWithBall(PlayerO playerWithBall) { this.playerWithBall = playerWithBall; }
     public void setBasketTarget(EmptyAgent basketTarget) { this.basketTarget = basketTarget; }
@@ -168,9 +207,4 @@ public class PlayerD extends SteeringAgent {
         this.mainTarget.getBody().setTransform(initialPos, this.body.getAngle());
         this.body.setTransform(initialPos, this.body.getAngle());
     }
-
-
-
-    public Ball getBallTarget() { return this.ballTarget; }
-    public void setBallTarget(Ball ballTarget) { this.ballTarget = ballTarget; }
 }

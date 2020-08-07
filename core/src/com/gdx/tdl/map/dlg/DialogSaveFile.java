@@ -8,13 +8,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.gdx.tdl.map.tct.SaveLoad;
 import com.gdx.tdl.map.tct.Tactic;
 import com.gdx.tdl.util.AssetLoader;
 
 public class DialogSaveFile extends AbstractDialog {
 
-    public DialogSaveFile(Tactic tactic) {
-        super(tactic);
+    public DialogSaveFile(SaveLoad saveLoad) {
+        super(saveLoad);
     }
 
     @Override
@@ -87,7 +88,9 @@ public class DialogSaveFile extends AbstractDialog {
         cancelTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                showing = false;
+                setFail(false);
+                setSuccess(false);
+                setShowing(false);
             }
         });
     }
@@ -95,18 +98,23 @@ public class DialogSaveFile extends AbstractDialog {
     private void saveLocal(String name) {
         // TODO
         if (!name.isEmpty())
-            saveLoad.getTactic().setName(name);
+            saveLoad.setTacticName(name);
 
         saveLoad.saveLocalData();
-        showing = false;
+        setShowing(false);
     }
 
     private void saveCloud(String name) {
         // TODO
         if (!name.isEmpty())
-            saveLoad.getTactic().setName(name);
+            saveLoad.setTacticName(name);
 
         saveLoad.saveCloudData();
-        showing = false;
+        setShowing(false);
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }
