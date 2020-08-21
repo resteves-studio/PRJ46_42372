@@ -184,8 +184,8 @@ public class AssetLoader {
     }
 
     private static void helpMenuLoad() {
-        helpAtaque = new Texture("helpAtaque.PNG");
-        helpDefesa = new Texture("helpDefesa.PNG");
+        helpAtaque = new Texture("helpAtaque.png");
+        helpDefesa = new Texture("helpDefesa.png");
         helpTatica = new Texture("helpTatica.PNG");
         helpFicheiros = new Texture("helpFicheiros.PNG");
     }

@@ -10,7 +10,7 @@ public class OptionsTable {
     public static final int TACT = 2;
     public static final int SAVE = 3;
 
-    private OptionButton[] offensiveOptions, defensiveOptions, tacticOptions, saveOptions, menuOptions, helpOptions;
+    private OptionButton[] offensiveOptions, defensiveOptions, tacticOptions, saveOptions;
 
     private int currentOption;
     private World world;
@@ -22,8 +22,6 @@ public class OptionsTable {
         this.defensiveOptions = new OptionButton[4];
         this.tacticOptions = new OptionButton[5];
         this.saveOptions = new OptionButton[5];
-        this.menuOptions = new OptionButton[2];
-        this.helpOptions = new OptionButton[1];
 
         this.currentOption = OFFE;
     }
@@ -42,6 +40,8 @@ public class OptionsTable {
         defensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.manToManOption, AssetLoader.manToManSelectedOption);
         defensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.zone23Option, AssetLoader.zone23SelectedOption);
         defensiveOptions[3] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+
+        defensiveOptions[1].setIsSelected(true);
     }
 
     public void tacticCreationOptionsDraw() {
@@ -58,17 +58,6 @@ public class OptionsTable {
         saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.loadFile);
         saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.notes);
         saveOptions[4] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
-        //saveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.savePDF);
-        //saveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.saveVideo);
-    }
-
-    public void menuOptionsDraw(World world) {
-        menuOptions[0] = new OptionButton(world, 0, Gdx.graphics.getHeight()*5/6f, AssetLoader.menuOption, "", Gdx.graphics.getHeight()/300f);
-        menuOptions[1] = new OptionButton(world, 0, 0, AssetLoader.helpOption, "", Gdx.graphics.getHeight()/300f);
-    }
-
-    public void helpOptionsDraw(World world) {
-        helpOptions[0]  = new OptionButton(world, 0, 0, AssetLoader.goback, AssetLoader.runSelectedOption, "Voltar", Gdx.graphics.getHeight()/400f);
     }
 
     public void update(OptionButton[] options) {
@@ -83,8 +72,6 @@ public class OptionsTable {
     public OptionButton[] getDefensiveOptions() { return defensiveOptions; }
     public OptionButton[] getTacticCreationOptions() { return tacticOptions; }
     public OptionButton[] getSaveOptions() { return saveOptions; }
-    public OptionButton[] getMenuOptions() { return menuOptions; }
-    public OptionButton[] getHelpOptions() { return helpOptions; }
     public int getCurrentOption() { return currentOption; }
 
     // setters

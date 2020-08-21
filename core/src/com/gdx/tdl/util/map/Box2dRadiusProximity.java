@@ -5,6 +5,8 @@ import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gdx.tdl.map.ags.Ball;
+import com.gdx.tdl.map.ags.EmptyAgent;
 
 /** A {@code Box2dRadiusProximity} is a {@link Proximity} that queries the world for all fixtures that potentially overlap the
  * circle having the specified detection radius and whose center is the owner position.

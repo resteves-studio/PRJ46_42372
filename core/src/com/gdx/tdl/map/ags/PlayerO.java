@@ -8,7 +8,7 @@ import com.gdx.tdl.util.AssetLoader;
 
 public class PlayerO extends SteeringAgent {
     private boolean hasBall, hasMoved, frameOver;
-    private String playerColor;
+    private String playerColor, zoneSpace;
     private PlayerCheck check;
     private EmptyAgent target;
     private int num, lastMove, receiver;
@@ -20,6 +20,7 @@ public class PlayerO extends SteeringAgent {
         this.check = new PlayerCheck(world, body.getPosition().cpy(), boundingRadius/1.25f, BodyDef.BodyType.DynamicBody);
 
         this.num = num;
+        this.zoneSpace = "A";
         this.playerColor = playerColor;
         this.lastMove = -1;
         this.receiver = -1;
@@ -125,12 +126,14 @@ public class PlayerO extends SteeringAgent {
     public int getLastMove() { return this.lastMove; }
     public int getReceiver() { return this.receiver; }
     public EmptyAgent getTarget() { return this.target; }
+    public String getZoneSpace() { return this.zoneSpace; }
     public boolean isFrameOver() { return this.frameOver; }
 
     // setters
     public void setHasBall(boolean hasBall) { this.hasBall = hasBall; }
     public void setLastMove(int lastMove) { this.lastMove = lastMove; }
     public void setReceiver(int receiver) { this.receiver = receiver; }
+    public void setZoneSpace(String zoneSpace) { this.zoneSpace = zoneSpace; }
     public void setHasMoved(boolean hasMoved) { this.hasMoved = hasMoved; }
     public void setFrameOver(boolean frameOver) { this.frameOver = frameOver; }
     public void setPlayerColor(String playerColor) { this.playerColor = playerColor; }

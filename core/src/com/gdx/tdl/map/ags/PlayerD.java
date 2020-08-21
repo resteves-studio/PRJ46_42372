@@ -9,18 +9,52 @@ import com.gdx.tdl.util.AssetLoader;
 import com.gdx.tdl.util.map.Circle;
 import com.gdx.tdl.util.map.Point;
 
+import java.util.HashMap;
+
 public class PlayerD extends SteeringAgent {
     private PlayerO playerTarget, playerWithBall;
     private EmptyAgent basketTarget, mainTarget;
-    private boolean permissionToFollow;
-    private String playerColor;
-    private Ball ballTarget;
+    private boolean permissionToFollow, homem;
+    private String playerColor, zoneSpace;
+    private HashMap<String, Vector2> A, B, C, D, E;
     private int num;
 
-    public PlayerD(World world, Vector2 pos, float boundingRadius, int num, String playerColor) {
+    public PlayerD(World world, Vector2 pos, float boundingRadius, int num, String playerColor, String zoneSpace) {
         super(world, pos, boundingRadius, BodyDef.BodyType.DynamicBody);
 
+        A = new HashMap<>();
+        A.put("B", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()/2f));
+        A.put("C", new Vector2(Gdx.graphics.getWidth()*7.25f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+        A.put("D", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()*6.50f/10f));
+        A.put("E", new Vector2(Gdx.graphics.getWidth()*3.75f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+
+        B = new HashMap<>();
+        B.put("A", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()/2f));
+        B.put("C", new Vector2(Gdx.graphics.getWidth()*7.25f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+        B.put("D", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()*6.50f/10f));
+        B.put("E", new Vector2(Gdx.graphics.getWidth()*3.75f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+
+        C = new HashMap<>();
+        C.put("A", new Vector2(Gdx.graphics.getWidth()*7.50f/10f, Gdx.graphics.getHeight()/2f));
+        C.put("B", new Vector2(Gdx.graphics.getWidth()*6.00f/10f, Gdx.graphics.getHeight()/2f));
+        C.put("D", new Vector2(Gdx.graphics.getWidth()*7.25f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+        C.put("E", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+
+        D = new HashMap<>();
+        D.put("A", new Vector2(Gdx.graphics.getWidth()*6.50f/10f, Gdx.graphics.getHeight()*4/10f));
+        D.put("B", new Vector2(Gdx.graphics.getWidth()*4.50f/10f, Gdx.graphics.getHeight()*4/10f));
+        D.put("C", new Vector2(Gdx.graphics.getWidth()*7.25f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+        D.put("E", new Vector2(Gdx.graphics.getWidth()*3.75f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+
+        E = new HashMap<>();
+        E.put("A", new Vector2(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/2f));
+        E.put("B", new Vector2(Gdx.graphics.getWidth()*3.50f/10f, Gdx.graphics.getHeight()/2f));
+        E.put("C", new Vector2(Gdx.graphics.getWidth()*5.50f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+        E.put("D", new Vector2(Gdx.graphics.getWidth()*3.75f/10f, Gdx.graphics.getHeight()*7.75f/10f));
+
         this.num = num;
+        this.homem = true;
+        this.zoneSpace = zoneSpace;
         this.playerColor = playerColor;
         this.permissionToFollow = false;
     }
@@ -30,12 +64,19 @@ public class PlayerD extends SteeringAgent {
     public void agentDraw() {
         sprite.setRotation(body.getAngle() * 180 / (float) Math.PI);
         sprite.setPosition(body.getPosition().cpy().x - sprite.getWidth()/2, body.getPosition().cpy().y - sprite.getHeight()/2);
-        if (playerTarget.hasBall()) sprite.setRegion(playerColor());
-        else sprite.setRegion(playerIIColor());
+        if (homem) {
+            if (playerTarget.hasBall()) sprite.setRegion(playerColor());
+            else sprite.setRegion(playerIIColor());
+        } else {
+            // TODO nao altera a cor
+            if (getPlayerWithBall().getZoneSpace().equals(this.zoneSpace))
+                sprite.setRegion(playerColor());
+            else sprite.setRegion(playerIIColor());
+        }
         sprite.draw(AssetLoader.batch);
 
         if (permissionToFollow)
-            setMainTargetPosition(calculateTargetPosition());
+            setMainTargetPosition(homem ? calculateTargetPosition() : calculateZoneSpace());
 
         if (body.getPosition().equals(mainTarget.getBody().getPosition()))
             steeringAcceleration.linear.setZero();
@@ -76,6 +117,7 @@ public class PlayerD extends SteeringAgent {
         }
     }
 
+    // defesa individual - calcula a posicao do target
     private Vector2 calculateTargetPosition() {
         // se o seu player tiver a bola, fica entre ele e o cesto
         if (getPlayerTarget().hasBall()) {
@@ -160,7 +202,7 @@ public class PlayerD extends SteeringAgent {
         return new Vector2(p0.getX(), p0.getY());
     }
 
-    // adapta os angulos conforme a posicao dos jogadores TODO melhorar e ver escolha dos centros dos circulos
+    // adapta os angulos conforme a posicao dos jogadores
     private int[] getAngles(float theta) {
         int[] angles = new int[3];
 
@@ -179,6 +221,62 @@ public class PlayerD extends SteeringAgent {
         }
 
         return angles;
+    }
+
+    // defesa zona - calcula o espaco e a posicao do target
+    private Vector2 calculateZoneSpace() {
+        float x = getPlayerWithBall().getPosition().x;
+        float y = getPlayerWithBall().getPosition().y;
+
+        // se o jogador com bola tiver na zona A
+        if (x > Gdx.graphics.getWidth()/2f && y < Gdx.graphics.getHeight()/2f) {
+            getPlayerWithBall().setZoneSpace("A");
+
+            // verifica se o defesa nao e o jogador dessa zona e retorna a sua posicao
+            if (!this.zoneSpace.equals("A"))
+                return A.get(this.zoneSpace);
+        }
+
+        // se o jogador com bola tiver na zona B
+        else if (x < Gdx.graphics.getWidth()/2f && y < Gdx.graphics.getHeight()/2f) {
+            getPlayerWithBall().setZoneSpace("B");
+
+            // verifica se o defesa nao e o jogador dessa zona e retorna a sua posicao
+            if (!this.zoneSpace.equals("B"))
+                return B.get(this.zoneSpace);
+        }
+
+        // se o jogador com bola tiver na zona C
+        else if (x > Gdx.graphics.getWidth()*6.95/10f && y > Gdx.graphics.getHeight()/2f) {
+            getPlayerWithBall().setZoneSpace("C");
+
+            // verifica se o defesa nao e o jogador dessa zona e retorna a sua posicao
+            if (!this.zoneSpace.equals("C"))
+                return C.get(this.zoneSpace);
+        }
+
+        // se o jogador com bola tiver na zona D
+        else if (x > Gdx.graphics.getWidth()*4/10f && x < Gdx.graphics.getWidth()*6.95/10f && y > Gdx.graphics.getHeight()/2f) {
+            getPlayerWithBall().setZoneSpace("D");
+
+            // verifica se o defesa nao e o jogador dessa zona e retorna a sua posicao
+            if (!this.zoneSpace.equals("D"))
+                return D.get(this.zoneSpace);
+        }
+
+        // se o jogador com bola tiver na zona E
+        else if (x < Gdx.graphics.getWidth()*4/10f && y > Gdx.graphics.getHeight()/2f) {
+            getPlayerWithBall().setZoneSpace("E");
+
+            // verifica se o defesa nao e o jogador dessa zona e retorna a sua posicao
+            if (!this.zoneSpace.equals("E"))
+                return E.get(this.zoneSpace);
+        }
+
+        // se for o defesa daquele espaco, fica 1x1 com o jogador da bola
+        Vector2 u = getBasketTarget().getPosition().cpy().sub(getPlayerWithBall().getPosition().cpy()).nor();
+        Vector2 v = getPlayerWithBall().getPosition().cpy().add(u.scl(4f * getBoundingRadius(), 4f * getBoundingRadius()));
+        return new Vector2(v.x, v.y);
     }
 
 
@@ -203,6 +301,8 @@ public class PlayerD extends SteeringAgent {
     public void setPlayerWithBall(PlayerO playerWithBall) { this.playerWithBall = playerWithBall; }
     public void setBasketTarget(EmptyAgent basketTarget) { this.basketTarget = basketTarget; }
     public void setPermissionToFollow(boolean permissionToFollow) { this.permissionToFollow = permissionToFollow; }
+    public void setHomem() { this.homem = true; }
+    public void setZona() { this.homem = false; }
     public void setPosToInitial() {
         this.mainTarget.getBody().setTransform(initialPos, this.body.getAngle());
         this.body.setTransform(initialPos, this.body.getAngle());
