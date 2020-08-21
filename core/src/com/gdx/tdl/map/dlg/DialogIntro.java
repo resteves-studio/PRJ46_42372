@@ -28,7 +28,7 @@ public class DialogIntro extends AbstractDialog {
         stage.addActor(tableA);
 
         // textfield
-        final Label titleL = new Label("Hey Coach", AssetLoader.skinXP, "title");
+        final Label titleL = new Label("Boas, Coach", AssetLoader.skinXP, "title");
         tableA.add(titleL);
 
         // tabela dos botoes
@@ -38,25 +38,15 @@ public class DialogIntro extends AbstractDialog {
         stage.addActor(tableB);
 
         // botoes
-        TextButton newTacticTB = new TextButton("New Tactic", AssetLoader.skinXP);
+        TextButton newTacticTB = new TextButton("Gerir Tática", AssetLoader.skinXP);
         tableB.add(newTacticTB).expand().fill().padBottom(Gdx.graphics.getHeight()/50f);
         tableB.row();
-        TextButton loadTacticTB = new TextButton("Load Tactic", AssetLoader.skinXP);
-        tableB.add(loadTacticTB).expand().fill().padBottom(Gdx.graphics.getHeight()/50f);
-        tableB.row();
-        TextButton updPwdTB = new TextButton("Update Password", AssetLoader.skinXP);
+        TextButton updPwdTB = new TextButton("Recuperar Password", AssetLoader.skinXP);
         tableB.add(updPwdTB).expand().fill();
 
 
         // listeners
         newTacticTB.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                setShowing(false);
-            }
-        });
-
-        loadTacticTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setShowing(false);

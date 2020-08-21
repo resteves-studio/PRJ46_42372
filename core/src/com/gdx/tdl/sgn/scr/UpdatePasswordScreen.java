@@ -14,9 +14,6 @@ import com.gdx.tdl.util.sgn.ButtonUtil;
 import com.gdx.tdl.util.sgn.StageManager;
 
 import pl.mk5.gdx.fireapp.GdxFIRAuth;
-import pl.mk5.gdx.fireapp.auth.GdxFirebaseUser;
-import pl.mk5.gdx.fireapp.functional.BiConsumer;
-import pl.mk5.gdx.fireapp.functional.Consumer;
 
 public class UpdatePasswordScreen extends AbstractStage {
 
@@ -34,7 +31,7 @@ public class UpdatePasswordScreen extends AbstractStage {
 
         // field da password antiga
         final TextField oldPwdTF = new TextField("", AssetLoader.skin, "default");
-        oldPwdTF.setMessageText("old password");
+        oldPwdTF.setMessageText("password antiga");
         oldPwdTF.setPasswordMode(true);
         oldPwdTF.setPasswordCharacter('*');
         updPwdTable.add(oldPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/35f);
@@ -42,19 +39,19 @@ public class UpdatePasswordScreen extends AbstractStage {
 
         // field da password nova
         final TextField newPwdTF = new TextField("", AssetLoader.skin, "default");
-        newPwdTF.setMessageText("new password");
+        newPwdTF.setMessageText("password nova");
         newPwdTF.setPasswordMode(true);
         newPwdTF.setPasswordCharacter('*');
         updPwdTable.add(newPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         updPwdTable.row();
 
         // botao de upload
-        TextButton updPwdTB = new TextButton("Update Password", AssetLoader.skin, "default");
+        TextButton updPwdTB = new TextButton("Atualizar Password", AssetLoader.skin, "default");
         updPwdTable.add(updPwdTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
         updPwdTable.row();
 
         // botao de voltar atras
-        TextButton goBackTB = new TextButton("Go Back", AssetLoader.skin, "default");
+        TextButton goBackTB = new TextButton("Voltar", AssetLoader.skin, "default");
         updPwdTable.add(goBackTB);
 
         // adicao de listeners aos botoes

@@ -20,10 +20,10 @@ public class SaveLoad {
         this.fail = false;
         this.tacticLoaded = false;
 
-        GdxFIRAuth.instance()
+        /*GdxFIRAuth.instance()
                 .signInWithEmailAndPassword("resteves.studio@gmail.com", "basket".toCharArray())
                 .then(gdxFirebaseUser -> Gdx.app.log("LOGGED IN TO", "resteves.studio@gmail.com"))
-                .fail((s, throwable) -> { Gdx.app.log("FAILED SIGNIN", s); }); //setFail(true); });
+                .fail((s, throwable) -> { Gdx.app.log("FAILED SIGNIN", s); }); //setFail(true); });*/
     }
 
     // guarda a tatica localmente
