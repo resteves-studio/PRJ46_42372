@@ -34,10 +34,10 @@ import java.util.concurrent.TimeUnit;
 
 public class CourtScreen extends AbstractScreen implements GestureDetector.GestureListener {
     // opcoes de botoes existentes
-    private static final int MENU   = 0, FRAME  = 1, RUN = 2, PASS = 3, SCREEN = 4, HELP = 5;
+    private static final int MENU   = 0, FRAME  = 1, RUN = 2, PASS = 3, HELP = 4;
     private static final int PLAY   = 6, RESET  = 7;
     private static final int MANMAN = 8, ZONE   = 9;
-    private static final int SVFILE = 10, LDFILE = 11, NOTES = 12;//SVPDF = 11, SVVID = 12;
+    private static final int SVFILE = 10, LDFILE = 11, NOTES = 12;
     private OptionButton[] offensiveOptions, defensiveOptions, tacticCreationOptions, saveOptions;
 
     // timer
@@ -277,6 +277,13 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 } else {
                     if (saveLoad.wasTacticLoaded()) {
                         this.tactic = saveLoad.getTactic();
+                        dialogIntro.setTactic(this.tactic);
+                        dialogNoPlay.setTactic(this.tactic);
+                        dialogSaveFile.setTactic(this.tactic);
+                        dialogLoadFile.setTactic(this.tactic);
+                        dialogNotes.setTactic(this.tactic);
+                        successDialog.setTactic(this.tactic);
+                        failDialog.setTactic(this.tactic);
                         saveLoad.setTacticLoaded(false);
                         Gdx.app.log("TACTIC", "LOADED");
                     }
@@ -368,8 +375,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             if (btn == 1) return FRAME;
             if (btn == 2) return RUN;
             if (btn == 3) return PASS;
-            if (btn == 4) return SCREEN;
-            if (btn == 5) return HELP;
+            if (btn == 4) return HELP;
         } else if (opt == OptionsTable.DEFE) {
             if (btn == 1) return MANMAN;
             if (btn == 2) return ZONE;
@@ -435,7 +441,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
     // selecciona um player
     private void tagPlayer() {
-        if ( ! ((option == PASS || option == SCREEN) && !offense[bodyHitId].hasBall()) ) {
+        if ( ! (option == PASS && !offense[bodyHitId].hasBall()) ) {
             offense[bodyHitId].setTagged(true);
             isSomeoneSelected = true;
             for (PlayerO playerO : offense) {
@@ -706,7 +712,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                         cancelSelect = true;
                     else {
                         bodyHit = offense[i].getBody();
-                        if (!isSomeoneSelected || option == PASS || option == SCREEN)
+                        if (!isSomeoneSelected || option == PASS)
                             bodyHitId = i;
                     }
                     return;

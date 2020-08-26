@@ -24,8 +24,8 @@ public enum ScreenEnum {
     },
 
     COURT {
-        public AbstractScreen getScreen(Object... params) { return new CourtScreen(); }
         public AbstractStage getStage(Object... params) { return null; }
+        public AbstractScreen getScreen(Object... params) { return new CourtScreen(); }
     };
 
     public abstract AbstractScreen getScreen(Object... params);

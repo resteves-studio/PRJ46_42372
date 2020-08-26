@@ -43,19 +43,19 @@ public class CreateUserScreen extends AbstractStage {
 
         // field da password
         final TextField pswdTF = new TextField("", AssetLoader.skin, "default");
-        pswdTF.setMessageText("password");
+        pswdTF.setMessageText("palavra-passe");
         pswdTF.setPasswordMode(true);
         pswdTF.setPasswordCharacter('*');
         createUserTable.add(pswdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         createUserTable.row();
 
         // botao de upload
-        TextButton signUpTB = new TextButton("Sign Up", AssetLoader.skin, "default");
+        TextButton signUpTB = new TextButton("Registar", AssetLoader.skin, "default");
         createUserTable.add(signUpTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
         createUserTable.row();
 
         // botao de voltar atras
-        TextButton goBackTB = new TextButton("Go Back", AssetLoader.skin, "default");
+        TextButton goBackTB = new TextButton("Voltar", AssetLoader.skin, "default");
         createUserTable.add(goBackTB);
 
         // adicao de listeners aos botoes
@@ -65,31 +65,25 @@ public class CreateUserScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (mailTF.getText().isEmpty() || pswdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
-                    dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para criar conta.\n")
+                    Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                    dialog.text("\nUm dos campos encontra-se em branco.\nPreencha ambos para criar a conta.\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else if (!validate(mailTF.getText())) {
-                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
-                    dialog.text("\nO e-mail introduzido nao e valido\n")
+                    Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                    dialog.text("\nO e-mail introduzido não é valido\n")
                             .button("Percebi", true).show(CreateUserScreen.this);
                 } else {
                     GdxFIRAuth.inst()
                             .createUserWithEmailAndPassword(mailTF.getText(), pswdTF.getText().toCharArray())
-                            .then(new Consumer<GdxFirebaseUser>() {
-                                @Override
-                                public void accept(GdxFirebaseUser gdxFirebaseUser) {
-                                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
-                                    dialog.text("\nUser criado! Faca login para entrar\n")
-                                            .button("Obrigado(a)", true).show(CreateUserScreen.this);
-                                    AssetLoader.changeScreen = true;
-                                }
+                            .then(gdxFirebaseUser -> {
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                                dialog.text("\nUser criado! Faça login para entrar.\n")
+                                        .button("Obrigado(a)", true).show(CreateUserScreen.this);
+                                AssetLoader.changeScreen = true;
                             })
-                            .fail(new BiConsumer<String, Throwable>() {
-                                @Override
-                                public void accept(String s, Throwable throwable) {
-                                    Dialog dialog = new Dialog("", AssetLoader.skinXP, "dialog");
-                                    dialog.text("\nUser ja existe...\n").button("Percebi", true).show(CreateUserScreen.this);
-                                }
+                            .fail((s, throwable) -> {
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                                dialog.text("\nUser já existe...\n").button("Percebi", true).show(CreateUserScreen.this);
                             });
                 }
                 if (AssetLoader.changeScreen) {

@@ -31,7 +31,7 @@ public class UpdatePasswordScreen extends AbstractStage {
 
         // field da password antiga
         final TextField oldPwdTF = new TextField("", AssetLoader.skin, "default");
-        oldPwdTF.setMessageText("password antiga");
+        oldPwdTF.setMessageText("palavra-passe antiga");
         oldPwdTF.setPasswordMode(true);
         oldPwdTF.setPasswordCharacter('*');
         updPwdTable.add(oldPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/35f);
@@ -39,14 +39,14 @@ public class UpdatePasswordScreen extends AbstractStage {
 
         // field da password nova
         final TextField newPwdTF = new TextField("", AssetLoader.skin, "default");
-        newPwdTF.setMessageText("password nova");
+        newPwdTF.setMessageText("palavra-passe nova");
         newPwdTF.setPasswordMode(true);
         newPwdTF.setPasswordCharacter('*');
         updPwdTable.add(newPwdTF).expand().fill().padBottom(Gdx.graphics.getHeight()/11.5f);
         updPwdTable.row();
 
         // botao de upload
-        TextButton updPwdTB = new TextButton("Atualizar Password", AssetLoader.skin, "default");
+        TextButton updPwdTB = new TextButton("Atualizar", AssetLoader.skin, "default");
         updPwdTable.add(updPwdTB).expand().fill().padBottom(Gdx.graphics.getHeight()/5f);
         updPwdTable.row();
 
@@ -61,8 +61,8 @@ public class UpdatePasswordScreen extends AbstractStage {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (oldPwdTF.getText().isEmpty() || newPwdTF.getText().isEmpty()) {
-                    Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
-                    dialog.text("Um dos campos encontra-se em branco.\nPreencha ambos para atualizar password.")
+                    Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                    dialog.text("Um dos campos encontra-se em branco.\nPreencha ambos para atualizar palavra-passe.")
                             .button("Percebi", true).show(UpdatePasswordScreen.this);
                 } else {
                     GdxFIRAuth.inst()
@@ -70,14 +70,14 @@ public class UpdatePasswordScreen extends AbstractStage {
                                     oldPwdTF.getText().toCharArray())
                             .then(gdxFirebaseUser -> {
                                 GdxFIRAuth.instance().getCurrentUser().updatePassword(newPwdTF.getText().toCharArray());
-                                Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
-                                dialog.text("Password alterada!")
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                                dialog.text("Palavra-passe alterada!")
                                         .button("Obrigado(a)", true).show(UpdatePasswordScreen.this);
                                 //AssetLoader.changeScreen = true;
                             })
                             .fail((s, throwable) -> {
-                                Dialog dialog = new Dialog("", AssetLoader.skin, "dialog");
-                                dialog.text("Password antiga errada. Tente novamente.")
+                                Dialog dialog = new Dialog("", AssetLoader.skin, "default");
+                                dialog.text("Palavra-passe antiga errada. Tente novamente.")
                                         .button("Percebi", true).show(UpdatePasswordScreen.this);
                             });
                 }

@@ -39,7 +39,6 @@ public class ScreenManager {
         // troca para o novo screen
         if (screenEnum == ScreenEnum.COURT) {
             AbstractScreen newScreen = screenEnum.getScreen(params);
-            //newScreen.buildScreen();
             game.setScreen(newScreen);
         } else {
             AbstractStage newStage = screenEnum.getStage(params);

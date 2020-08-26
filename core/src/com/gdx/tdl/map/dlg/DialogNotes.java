@@ -2,7 +2,6 @@ package com.gdx.tdl.map.dlg;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -28,7 +27,7 @@ public class DialogNotes extends AbstractDialog {
         // text area
         final TextArea notesTA = new TextArea(saveLoad.getTactic().getNotes(), AssetLoader.skinXP);
         final StringBuilder strBuilder = new StringBuilder();
-        notesTA.setMessageText(" notes");
+        notesTA.setMessageText(" notas");
         notesTA.setTextFieldListener(new TextField.TextFieldListener() { // TODO resolver problema da newline
             @Override
             public void keyTyped(TextField textField, char c) {
@@ -39,29 +38,22 @@ public class DialogNotes extends AbstractDialog {
         });
         tableB.add(notesTA).expand().fill();
 
-        /*/ scroll panel
-        Table container = new Table(AssetLoader.skinXP);
-        ScrollPane scroll = new ScrollPane(container);
-        scroll.setScrollbarsVisible(true);
-        tableB.add(container);*/
-
         // tabela dos botoes
-        Table tableC = new Table(AssetLoader.skinXP);
+        Table tableC = new Table(AssetLoader.skin);
         tableC.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/8f);
         tableC.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
         stage.addActor(tableC);
 
         // botoes
-        TextButton submitTB = new TextButton("Submit", AssetLoader.skinXP);
+        TextButton submitTB = new TextButton("Submeter", AssetLoader.skin);
         tableC.add(submitTB).expand().fill().padRight(Gdx.graphics.getWidth()/30f);
-        TextButton cancelTB = new TextButton("Cancel", AssetLoader.skinXP);
+        TextButton cancelTB = new TextButton("Cancelar", AssetLoader.skin);
         tableC.add(cancelTB).expand().fill().padLeft(Gdx.graphics.getWidth()/30f);
 
         // listeners
         submitTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO
                 tactic.setNotes(notesTA.getText());
                 Gdx.app.log("NOTES", tactic.getNotes());
                 setShowing(false);

@@ -22,61 +22,39 @@ public class DialogSaveFile extends AbstractDialog {
     public void dialogDraw() {
         // tabela do TF
         Table tableA = new Table(AssetLoader.skinXP);
-        tableA.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*4/5f);
+        tableA.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*3/4f);
         tableA.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
         stage.addActor(tableA);
 
         // textfield
-        final Label titleL = new Label("Save File", AssetLoader.skinXP, "title");
+        final Label titleL = new Label("Guardar Ficheiro", AssetLoader.skinXP, "title");
         tableA.add(titleL);
 
         // tabela do TF
         Table tableB = new Table(AssetLoader.skinXP);
-        tableB.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/1.75f);
-        tableB.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
+        tableB.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/2.25f);
+        tableB.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
         stage.addActor(tableB);
 
         // textfield
         final TextField nameTF = new TextField("", AssetLoader.skinXP);
-        nameTF.setMessageText("  name");
+        nameTF.setMessageText("  nome do ficheiro");
         tableB.add(nameTF).expand().fill();
 
         // tabela dos botoes
-        Table tableC = new Table(AssetLoader.skinXP);
-        tableC.setPosition(Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/8f);
-        tableC.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()/3f);
+        Table tableC = new Table(AssetLoader.skin);
+        tableC.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/8f);
+        tableC.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
         stage.addActor(tableC);
 
         // botoes
-        TextButton localTB = new TextButton("Local", AssetLoader.skinXP);
-        tableC.add(localTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
-        tableC.row();
-        TextButton cloudTB = new TextButton("Cloud", AssetLoader.skinXP);
-        tableC.add(cloudTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
-        tableC.row();
-        TextButton bothTB = new TextButton("Both", AssetLoader.skinXP);
-        tableC.add(bothTB).expand().fill();
-        tableC.row();
-        TextButton cancelTB = new TextButton("Cancel", AssetLoader.skinXP);
-        tableC.add(cancelTB).expand().fill().padTop(Gdx.graphics.getHeight()/20f);
-
+        TextButton loadTB = new TextButton("Guardar", AssetLoader.skin);
+        tableC.add(loadTB).expand().fill().padRight(Gdx.graphics.getWidth()/30f);
+        TextButton cancelTB = new TextButton("Cancelar", AssetLoader.skin);
+        tableC.add(cancelTB).expand().fill().padLeft(Gdx.graphics.getWidth()/30f);
 
         // listeners
-        localTB.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                saveLocal(nameTF.getText().trim());
-            }
-        });
-
-        cloudTB.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                saveCloud(nameTF.getText().trim());
-            }
-        });
-
-        bothTB.addListener(new ChangeListener() {
+        loadTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String name = nameTF.getText().trim();
@@ -96,7 +74,6 @@ public class DialogSaveFile extends AbstractDialog {
     }
 
     private void saveLocal(String name) {
-        // TODO
         if (!name.isEmpty())
             saveLoad.setTacticName(name);
 
@@ -105,7 +82,6 @@ public class DialogSaveFile extends AbstractDialog {
     }
 
     private void saveCloud(String name) {
-        // TODO
         if (!name.isEmpty())
             saveLoad.setTacticName(name);
 

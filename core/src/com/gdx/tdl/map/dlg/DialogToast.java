@@ -15,7 +15,7 @@ public class DialogToast extends AbstractDialog {
 
     @Override
     public void dialogDraw() {
-        dialog = new Dialog("", AssetLoader.skinXP, "dialog") {
+        dialog = new Dialog("", AssetLoader.skin, "default") {
             @Override
             protected void result(Object object) {
                 setFail(false);

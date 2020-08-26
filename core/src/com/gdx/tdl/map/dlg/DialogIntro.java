@@ -28,20 +28,20 @@ public class DialogIntro extends AbstractDialog {
         stage.addActor(tableA);
 
         // textfield
-        final Label titleL = new Label("Boas, Coach", AssetLoader.skinXP, "title");
+        final Label titleL = new Label("Bem-vindo, Coach", AssetLoader.skinXP, "title");
         tableA.add(titleL);
 
         // tabela dos botoes
-        Table tableB = new Table(AssetLoader.skinXP);
+        Table tableB = new Table(AssetLoader.skin);
         tableB.setPosition(Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/4f);
         tableB.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()/3f);
         stage.addActor(tableB);
 
         // botoes
-        TextButton newTacticTB = new TextButton("Gerir Tática", AssetLoader.skinXP);
+        TextButton newTacticTB = new TextButton("Gerir Tática", AssetLoader.skin);
         tableB.add(newTacticTB).expand().fill().padBottom(Gdx.graphics.getHeight()/50f);
         tableB.row();
-        TextButton updPwdTB = new TextButton("Recuperar Password", AssetLoader.skinXP);
+        TextButton updPwdTB = new TextButton("Recuperar Palavra-Passe", AssetLoader.skin);
         tableB.add(updPwdTB).expand().fill();
 
 

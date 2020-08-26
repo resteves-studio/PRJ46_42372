@@ -2,6 +2,7 @@ package com.gdx.tdl.map.dlg;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -12,62 +13,61 @@ import com.gdx.tdl.map.tct.Tactic;
 import com.gdx.tdl.util.AssetLoader;
 
 public class DialogLoadFile extends AbstractDialog {
+    private SaveLoad saveLoad;
 
     public DialogLoadFile(SaveLoad saveLoad) {
         super(saveLoad);
+        this.saveLoad = saveLoad;
     }
 
     @Override
     public void dialogDraw() {
         // tabela da label
         Table tableA = new Table(AssetLoader.skinXP);
-        tableA.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*4/5f);
+        tableA.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*3/4f);
         tableA.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
         stage.addActor(tableA);
 
         // textfield
-        final Label titleL = new Label("Load File", AssetLoader.skinXP, "title");
+        final Label titleL = new Label("Carregar Ficheiro", AssetLoader.skinXP, "title");
         tableA.add(titleL);
 
         // tabela do TF
-        Table tableB = new Table(AssetLoader.skinXP);
-        tableB.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/1.75f);
-        tableB.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/12f);
+        Table tableB = new Table(AssetLoader.skin);
+        tableB.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/2.25f);
+        tableB.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
         stage.addActor(tableB);
 
         // textfield
         final TextField nameTF = new TextField("", AssetLoader.skinXP);
-        nameTF.setMessageText("  name");
+        nameTF.setMessageText("  nome do ficheiro");
         tableB.add(nameTF).expand().fill();
 
         // tabela dos botoes
-        Table tableC = new Table(AssetLoader.skinXP);
-        tableC.setPosition(Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/5f);
-        tableC.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()/4f);
+        Table tableC = new Table(AssetLoader.skin);
+        tableC.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/8f);
+        tableC.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
         stage.addActor(tableC);
 
         // botoes
-        TextButton localTB = new TextButton("From Local", AssetLoader.skinXP);
-        tableC.add(localTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
-        tableC.row();
-        TextButton cloudTB = new TextButton("From Cloud", AssetLoader.skinXP);
-        tableC.add(cloudTB).expand().fill().padBottom(Gdx.graphics.getHeight()/75f);
-        tableC.row();
-        TextButton cancelTB = new TextButton("Cancel", AssetLoader.skinXP);
-        tableC.add(cancelTB).expand().fill().padTop(Gdx.graphics.getHeight()/20f);
+        TextButton loadTB = new TextButton("Carregar", AssetLoader.skin);
+        tableC.add(loadTB).expand().fill().padRight(Gdx.graphics.getWidth()/30f);
+        TextButton cancelTB = new TextButton("Cancelar", AssetLoader.skin);
+        tableC.add(cancelTB).expand().fill().padLeft(Gdx.graphics.getWidth()/30f);
 
         // listeners
-        localTB.addListener(new ChangeListener() {
+        loadTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                loadLocal(nameTF.getText().trim());
-            }
-        });
+                String name = nameTF.getText().trim();
+                if (loadCloud(name)) {
+                    Gdx.app.log("Loaded", "Cloud");
+                } else {
+                    loadLocal(name);
+                    Gdx.app.log("Loaded", "Local");
+                }
 
-        cloudTB.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                loadCloud(nameTF.getText().trim());
+                AssetLoader.loaded = false;
             }
         });
 
@@ -82,15 +82,13 @@ public class DialogLoadFile extends AbstractDialog {
     }
 
     private void loadLocal(String name) {
-        // TODO
         saveLoad.loadLocalData();
         setShowing(false);
     }
 
-    private void loadCloud(String name) {
-        // TODO
-        saveLoad.loadCloudData();
+    private boolean loadCloud(String name) {
         setShowing(false);
+        return saveLoad.loadCloudData();
     }
 
     @Override

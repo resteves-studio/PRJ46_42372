@@ -24,45 +24,6 @@ import com.gdx.tdl.util.AssetLoader;
  * Tem um botao de voltar atras para o Court
  */
 class HelpScreen {
-    /*private String ataqueText = "Corrida do jogador: selecionar primeiro a opcao e de seguida\n" +
-                                "o jogador em questao, cujo se ira destacar. Para seleccionar\n" +
-                                "o sitio para o qual pretende que o jogador se desloque,\n" +
-                                "carregue num espaco vazio do campo.\n\n" +
-                                "Passe: selecionar a segunda opcao e de seguida selecionar o\n" +
-                                "jogador com a posse da bola. Depois, selecione o jogador\n" +
-                                "para o qual pretende que receba a bola, de forma a realizar\n" +
-                                "o passe.\n\n" +
-                                "Nova frame: selecionar a terceira opcao. Primeiro sao\n" +
-                                "definidas as posicoes iniciais dos jogadores e, a partir daqui,\n" +
-                                "pode definir novos movimentos para todos os jogadores.\n" +
-                                "Nao e necessario aplicar movimentos em todos os jogadores.\n\n" +
-                                "O pequeno \"certo\" ao lado do jogador indica que o mesmo\n" +
-                                "realizou um movimento na frame atual. E aconselhada a\n" +
-                                "realizacao de apenas um movimento por jogador\n" +
-                                "em cada frame, de modo a nao sobrepor movimentos.";
-
-    private String defesaText = "O primeiro botao indica que o adversario se encontra a defender\nhomem-a-homem.\n\n" +
-                                "O segundo bot�o indica que o advers�rio se encontra a defender\nzona 2-3.\n\n" +
-                                "Uma das opcoes estara sempre selecionada.";
-
-    private String taticaText = "O primeiro botao inicia a reproducao da tatica.\n\n\n\n\n" +
-                                "O segundo botao adiciona uma frame.\n\n\n\n\n" +
-                                "O terceiro botao limpa a tatica atual.";
-
-    private String ficheirosText = "Sitio onde pode guardar a sua tatica ou carregar uma ja\n" +
-                                   "existente. Tendo feito login, tera o seu espaco para guardar as\n" +
-                                   "taticas que pretender.\n\n" +
-                                   "Selecionando o primeiro botao, aparece um novo menu, onde pode\n" +
-                                   "colocar o nome da tatica e guarda-la. Se nao colocar nenhum nome,\n" +
-                                   "este encontra-se pre-definido no formato \"tacticDDMMYYhhmm\",\n" +
-                                   "sendo DD o dia, MM o mes, YY o ano, hh as horas e mm os minutos.\n\n" +
-                                   "De modo a carregar uma tatica, encontra-se uma lista com as\n" +
-                                   "taticas guardadas anteriormente pelo utilizador, onde pode\n" +
-                                   "selecionar uma delas.\n\n" +
-                                   "Para alem disto, pode igualmente tirar notas acerca da sua\n" +
-                                   "tatica atual num separador proprio (terceiro botao).";*/
-
-
     private Table tableOption1, tableOption2, tableOption3, tableOption4;
     private Color normalColor, selectedColor;
     private Button[] buttons;
@@ -140,11 +101,11 @@ class HelpScreen {
         });
 
         // option buttons
-        Table tableHelpOptions = new Table(AssetLoader.skinXP);
+        Table tableHelpOptions = new Table(AssetLoader.skin);
         tableHelpOptions.setSize(Gdx.graphics.getWidth()*2/3f, Gdx.graphics.getHeight()/6f);
         tableHelpOptions.setPosition(Gdx.graphics.getWidth()/4f, Gdx.graphics.getHeight()*4/5f);
 
-        Button option1 = new TextButton("Ataque", AssetLoader.skinXP, "option");
+        Button option1 = new TextButton("Ataque", AssetLoader.skin, "default");
         option1.setColor(selectedColor);
         option1.addListener(new InputListener() {
             @Override
@@ -158,7 +119,7 @@ class HelpScreen {
             }
         });
 
-        Button option2 = new TextButton("Defesa", AssetLoader.skinXP, "option");
+        Button option2 = new TextButton("Defesa", AssetLoader.skin, "default");
         option2.setColor(normalColor);
         option2.addListener(new InputListener() {
             @Override
@@ -172,7 +133,7 @@ class HelpScreen {
             }
         });
 
-        Button option3 = new TextButton("Tatica", AssetLoader.skinXP, "option");
+        Button option3 = new TextButton("Tatica", AssetLoader.skin, "default");
         option3.setColor(normalColor);
         option3.addListener(new InputListener() {
             @Override
@@ -186,7 +147,7 @@ class HelpScreen {
             }
         });
 
-        Button option4 = new TextButton("Ficheiros", AssetLoader.skinXP, "option");
+        Button option4 = new TextButton("Ficheiros", AssetLoader.skin, "default");
         option4.setColor(normalColor);
         option4.addListener(new InputListener() {
             @Override

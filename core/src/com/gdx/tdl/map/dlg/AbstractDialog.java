@@ -1,6 +1,7 @@
 package com.gdx.tdl.map.dlg;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -28,7 +29,7 @@ public abstract class AbstractDialog {
     protected abstract void dialogDraw();
 
     public void dialogStageDraw() {
-        Gdx.gl.glClearColor(100/255f, 100/255f, 100/255f, 255f);
+        Gdx.gl.glClearColor(Color.ORANGE.r, Color.ORANGE.g, Color.ORANGE.b, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.draw();
@@ -47,6 +48,7 @@ public abstract class AbstractDialog {
 
     // ----- setters -----
     public void setShowing(boolean showing) { this.showing = showing; }
+    public void setTactic(Tactic tactic) { this.tactic = tactic; }
     public void setFail(boolean fail) { this.saveLoad.setFail(fail); }
     public void setSuccess(boolean success) { this.saveLoad.setSuccess(success); }
     public void addDialogToStage() { this.stage.addActor(dialog); }

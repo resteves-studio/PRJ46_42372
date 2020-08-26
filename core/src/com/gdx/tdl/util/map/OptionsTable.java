@@ -18,7 +18,7 @@ public class OptionsTable {
     OptionsTable(World world) {
         this.world = world;
 
-        this.offensiveOptions = new OptionButton[6];
+        this.offensiveOptions = new OptionButton[5];
         this.defensiveOptions = new OptionButton[4];
         this.tacticOptions = new OptionButton[5];
         this.saveOptions = new OptionButton[5];
@@ -31,8 +31,7 @@ public class OptionsTable {
         offensiveOptions[1] = new OptionButton(world, 0, Gdx.graphics.getHeight()*4/6f, AssetLoader.plusO, AssetLoader.plusSelected);
         offensiveOptions[2] = new OptionButton(world, 0, Gdx.graphics.getHeight()*3/6f, AssetLoader.runOption, AssetLoader.runSelectedOption);
         offensiveOptions[3] = new OptionButton(world, 0, Gdx.graphics.getHeight()*2/6f, AssetLoader.passOption, AssetLoader.passSelectedOption);
-        offensiveOptions[4] = new OptionButton(world, 0, Gdx.graphics.getHeight()  /6f, AssetLoader.screenOption, AssetLoader.screenSelectedOption);
-        offensiveOptions[5] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
+        offensiveOptions[4] = new OptionButton(world, 0, 0, AssetLoader.helpOption);
     }
 
     public void defensiveOptionsDraw() {

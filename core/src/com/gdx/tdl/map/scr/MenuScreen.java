@@ -114,7 +114,7 @@ class MenuScreen {
         tableHelpOptions.setPosition(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()*4/5f);
         tableHelpOptions.align(Align.left);
 
-        Button option1 = new TextButton("Interface", AssetLoader.skinXP, "option");
+        Button option1 = new TextButton("Interface", AssetLoader.skin, "default");
         option1.setColor(selectedColor);
         option1.addListener(new InputListener() {
             @Override
@@ -128,7 +128,7 @@ class MenuScreen {
             }
         });
 
-        Button option2 = new TextButton("Utilizador", AssetLoader.skinXP, "option");
+        Button option2 = new TextButton("Utilizador", AssetLoader.skin, "default");
         option2.setColor(normalColor);
         option2.addListener(new InputListener() {
             @Override
@@ -200,7 +200,7 @@ class MenuScreen {
             tableOption.row();
         }
 
-        Button updateButton = new TextButton("Atualizar", AssetLoader.skinXP);
+        Button updateButton = new TextButton("Atualizar", AssetLoader.skin);
         updateButton.addListener(new InputListener() {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -217,6 +217,7 @@ class MenuScreen {
             }
         });
 
+        tableOption.add(new Label("", AssetLoader.skin)).fill();
         tableOption.add(updateButton).padTop(Gdx.graphics.getWidth()/20f).fill();
 
         /*Image option2 = new Image(AssetLoader.court_green);
@@ -228,13 +229,13 @@ class MenuScreen {
     //
     private Table option2() {
         // tabela principal
-        Table tableOption = new Table(AssetLoader.skinXP);
+        Table tableOption = new Table(AssetLoader.skin);
         tableOption.setSize(Gdx.graphics.getWidth()/5f, Gdx.graphics.getHeight()*3/5f);
         tableOption.setPosition(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()/9f);
 
         Image icon = new Image(AssetLoader.icon);
 
-        Button resetPwd = new TextButton("Recuperar Password", AssetLoader.skinXP);
+        Button resetPwd = new TextButton("Recuperar Palavra-Passe", AssetLoader.skin);
         resetPwd.addListener(new InputListener() {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -248,7 +249,7 @@ class MenuScreen {
             }
         });
 
-        Button logout = new TextButton("Terminar Sess„o", AssetLoader.skinXP);
+        Button logout = new TextButton("Terminar Sess√£o", AssetLoader.skin);
         logout.addListener(new InputListener() {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

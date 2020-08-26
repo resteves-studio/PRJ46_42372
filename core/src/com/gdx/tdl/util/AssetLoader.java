@@ -13,14 +13,14 @@ public class AssetLoader {
     public static Texture whiteOne, whiteTwo, whiteThree, whiteFour, whiteFive, darkOne, darkTwo, darkThree, darkFour, darkFive;
     public static Texture orangeSelected, orangeIISelected, yellowSelected, yellowIISelected, greenSelected, greenIISelected;
     public static Texture playSelected, plusSelected, resetSelected, manToManSelectedOption, zone23SelectedOption;
-    public static Texture runOption, dribleOption, passOption, screenOption, manToManOption, zone23Option, goback;
     public static Texture court_wood, court_dark, court_light, court_green, court_blue, court_red, court_yellow;
-    public static Texture runSelectedOption, dribleSelectedOption, passSelectedOption, screenSelectedOption;
     public static Texture ball_orange, ball_dark, ball_light, ball_green, ball_blue, ball_red, ball_yellow;
+    public static Texture runOption, dribleOption, passOption, manToManOption, zone23Option, goback;
+    public static Texture runSelectedOption, dribleSelectedOption, passSelectedOption;
     public static Texture helpAtaque, helpDefesa, helpTatica, helpFicheiros;
     public static Texture I_login, icon, empty, check;
 
-    public static boolean changeScreen;
+    public static boolean changeScreen, loaded;
 
     public static SpriteBatch batch;
     public static BitmapFont font;
@@ -43,7 +43,7 @@ public class AssetLoader {
         skinsFontsLoad();
         helpMenuLoad();
 
-        changeScreen = false;
+        changeScreen = loaded = false;
     }
 
     public static void dispose() {
@@ -83,7 +83,6 @@ public class AssetLoader {
         runOption = new Texture("run.png");
         dribleOption = new Texture("drible.png");
         passOption = new Texture("pass.png");
-        screenOption = new Texture("screen.png");
         manToManOption = new Texture("mantoman.png");
         zone23Option = new Texture("zona23.png");
         goback = new Texture("goback.png");
@@ -96,7 +95,6 @@ public class AssetLoader {
         runSelectedOption = new Texture("runSelected.png");
         dribleSelectedOption = new Texture("dribleSelected.png");
         passSelectedOption = new Texture("passSelected.png");
-        screenSelectedOption = new Texture("screenSelected.png");
         manToManSelectedOption = new Texture("mantomanSelected.png");
         zone23SelectedOption = new Texture("zona23Selected.png");
     }
@@ -210,7 +208,6 @@ public class AssetLoader {
         runOption.dispose();
         dribleOption.dispose();
         passOption.dispose();
-        screenOption.dispose();
         manToManOption.dispose();
         zone23Option.dispose();
         goback.dispose();
@@ -223,7 +220,6 @@ public class AssetLoader {
         runSelectedOption.dispose();
         dribleSelectedOption.dispose();
         passSelectedOption.dispose();
-        screenSelectedOption.dispose();
         manToManSelectedOption.dispose();
         zone23SelectedOption.dispose();
     }

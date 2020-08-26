@@ -22,7 +22,6 @@ public abstract class AbstractStage extends Stage implements Screen {
     @Override
     public void render(float delta) {
         // cor de fundo
-        //Gdx.gl.glClearColor(200.0f/255, 80.0f/255, 0, 1);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 

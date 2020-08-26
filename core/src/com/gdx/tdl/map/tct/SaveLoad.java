@@ -3,6 +3,7 @@ package com.gdx.tdl.map.tct;
 import pl.mk5.gdx.fireapp.GdxFIRAuth;
 import pl.mk5.gdx.fireapp.GdxFIRStorage;
 import com.badlogic.gdx.Gdx;
+import com.gdx.tdl.util.AssetLoader;
 
 public class SaveLoad {
     TacticFileHandle tacticFileHandle;
@@ -83,27 +84,27 @@ public class SaveLoad {
     }
 
     // carrega a tatica de um ficheiro na cloud
-    public void loadCloudData() {
+    public boolean loadCloudData() {
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
         if (tacticFileHandle.getFileHandle().exists()) {
             GdxFIRStorage.instance()
                     .download(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
                     .after(GdxFIRAuth.instance().getCurrentUserPromise())
                     .then(fileMetadata -> {
-                        // TODO guardar a tatica
                         setTactic(tacticFileHandle.readTacticFromJSON());
                         Gdx.app.log("LOADED FROM", "Cloud");
-                        //setSuccess(true);
                         setTacticLoaded(true);
+                        AssetLoader.loaded = true;
                     })
 
                     .fail((s, throwable) -> {
                         Gdx.app.log("NOT SAVED TO", "Cloud");
-                        //setFail(true);
                     });
         } else {
             //setFail(true);
         }
+
+        return AssetLoader.loaded;
     }
 
     // ----- getters -----
