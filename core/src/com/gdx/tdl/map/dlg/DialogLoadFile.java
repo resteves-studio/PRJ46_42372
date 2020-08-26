@@ -60,6 +60,7 @@ public class DialogLoadFile extends AbstractDialog {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String name = nameTF.getText().trim();
+                Gdx.app.log("Name", name);
                 if (loadCloud(name)) {
                     Gdx.app.log("Loaded", "Cloud");
                 } else {
@@ -82,13 +83,13 @@ public class DialogLoadFile extends AbstractDialog {
     }
 
     private void loadLocal(String name) {
-        saveLoad.loadLocalData();
+        saveLoad.loadLocalData(name);
         setShowing(false);
     }
 
     private boolean loadCloud(String name) {
         setShowing(false);
-        return saveLoad.loadCloudData();
+        return saveLoad.loadCloudData(name);
     }
 
     @Override

@@ -143,7 +143,7 @@ public class TacticFileHandle {
     public String getFilePath() { return this.fileName; }
     public FileHandle getFileHandle() { return this.fileHandle; }
 
-    public void setFilePath(String fileName) { this.fileName = Gdx.files.getLocalStoragePath() + "/" + fileName + ".json"; }
+    public void setFilePath(String fileName) { this.fileName = Gdx.files.getLocalStoragePath() + fileName + ".json"; }
     public void setTacticName(String tacticName) { this.tactic.setName(tacticName); }
     public void setFileHandle(String path) { this.fileHandle = Gdx.files.local(path); }
 }

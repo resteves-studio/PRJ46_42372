@@ -66,7 +66,8 @@ public class SaveLoad {
     }
 
     // carrega a tatica de um ficheiro local
-    public void loadLocalData() {
+    public void loadLocalData(String fileName) {
+        tacticFileHandle.setFilePath(fileName);
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
         if (tacticFileHandle.getFileHandle().exists()) {
             setTactic(tacticFileHandle.readTacticFromJSON());
@@ -84,9 +85,12 @@ public class SaveLoad {
     }
 
     // carrega a tatica de um ficheiro na cloud
-    public boolean loadCloudData() {
+    public boolean loadCloudData(String fileName) {
+        Gdx.app.log("FILENAME", fileName);
+        tacticFileHandle.setFilePath(fileName);
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
-        if (tacticFileHandle.getFileHandle().exists()) {
+        Gdx.app.log("FILEPATH", tacticFileHandle.getFilePath());
+        //if (tacticFileHandle.getFileHandle().exists()) {
             GdxFIRStorage.instance()
                     .download(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
                     .after(GdxFIRAuth.instance().getCurrentUserPromise())
@@ -98,11 +102,11 @@ public class SaveLoad {
                     })
 
                     .fail((s, throwable) -> {
-                        Gdx.app.log("NOT SAVED TO", "Cloud");
+                        Gdx.app.log("NOT LOADED FROM", "Cloud");
                     });
-        } else {
+        /*} else {
             //setFail(true);
-        }
+        }*/
 
         return AssetLoader.loaded;
     }
