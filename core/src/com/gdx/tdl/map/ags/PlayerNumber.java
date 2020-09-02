@@ -26,19 +26,19 @@ public class PlayerNumber extends SteeringAgent {
     public void agentDraw() {
         switch (num) {
             case 1:
-                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteOne : AssetLoader.darkOne);
+                sprite.setRegion(this.numColor.equals("White") ? AssetLoader.whiteOne : AssetLoader.darkOne);
                 break;
             case 2:
-                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteTwo : AssetLoader.darkTwo);
+                sprite.setRegion(this.numColor.equals("White") ? AssetLoader.whiteTwo : AssetLoader.darkTwo);
                 break;
             case 3:
-                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteThree : AssetLoader.darkThree);
+                sprite.setRegion(this.numColor.equals("White") ? AssetLoader.whiteThree : AssetLoader.darkThree);
                 break;
             case 4:
-                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteFour : AssetLoader.darkFour);
+                sprite.setRegion(this.numColor.equals("White") ? AssetLoader.whiteFour : AssetLoader.darkFour);
                 break;
             case 5:
-                sprite.setRegion(this.numColor == "White" ? AssetLoader.whiteFive : AssetLoader.darkFive);
+                sprite.setRegion(this.numColor.equals("White") ? AssetLoader.whiteFive : AssetLoader.darkFive);
                 break;
         }
         sprite.setSize(boundingRadius, boundingRadius);

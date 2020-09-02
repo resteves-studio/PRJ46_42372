@@ -68,7 +68,6 @@ public class PlayerD extends SteeringAgent {
             if (playerTarget.hasBall()) sprite.setRegion(playerColor());
             else sprite.setRegion(playerIIColor());
         } else {
-            // TODO nao altera a cor
             if (getPlayerWithBall().getZoneSpace().equals(this.zoneSpace))
                 sprite.setRegion(playerColor());
             else sprite.setRegion(playerIIColor());

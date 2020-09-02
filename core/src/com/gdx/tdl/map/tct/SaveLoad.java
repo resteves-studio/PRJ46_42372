@@ -20,11 +20,6 @@ public class SaveLoad {
         this.success = false;
         this.fail = false;
         this.tacticLoaded = false;
-
-        /*GdxFIRAuth.instance()
-                .signInWithEmailAndPassword("resteves.studio@gmail.com", "basket".toCharArray())
-                .then(gdxFirebaseUser -> Gdx.app.log("LOGGED IN TO", "resteves.studio@gmail.com"))
-                .fail((s, throwable) -> { Gdx.app.log("FAILED SIGNIN", s); }); //setFail(true); });*/
     }
 
     // guarda a tatica localmente
@@ -33,10 +28,8 @@ public class SaveLoad {
             tacticFileHandle.setFilePath(tactic.getName());
             tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
             tacticFileHandle.writeTacticToJSON();
-            //setSuccess(true);
         } else {
             Gdx.app.log("NOT SAVED", "Local");
-            //setFail(true);
         }
     }
 
@@ -49,19 +42,15 @@ public class SaveLoad {
 
             if (tacticFileHandle.getFileHandle().exists()) {
                 GdxFIRStorage.instance()
-                        .upload(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
-                        .after(GdxFIRAuth.instance().getCurrentUserPromise())
-                        .then(fileMetadata -> {
-                            Gdx.app.log("SAVED TO", "Cloud");
-                            //setSuccess(true);
-                        })
-                        .fail((s, throwable) -> {
-                            Gdx.app.log("NOT SAVED TO", "Cloud");
-                            //setFail(true);
-                        });
+                    .upload(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
+                    .after(GdxFIRAuth.instance().getCurrentUserPromise())
+                    .then(fileMetadata -> {
+                        Gdx.app.log("SAVED TO", "Cloud");
+                    })
+                    .fail((s, throwable) -> {
+                        Gdx.app.log("NOT SAVED TO", "Cloud");
+                    });
             }
-        } else {
-            //setFail(true);
         }
     }
 
@@ -69,6 +58,7 @@ public class SaveLoad {
     public void loadLocalData(String fileName) {
         tacticFileHandle.setFilePath(fileName);
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
+
         if (tacticFileHandle.getFileHandle().exists()) {
             setTactic(tacticFileHandle.readTacticFromJSON());
 
@@ -77,36 +67,27 @@ public class SaveLoad {
             Gdx.app.log("NEW TACTIC", "Notes: " + getTactic().getNotes());
             Gdx.app.log("NEW TACTIC", "Size: " + getTactic().getSize());
 
-            //setSuccess(true);
             setTacticLoaded(true);
-        } else {
-            //setFail(true);
         }
     }
 
     // carrega a tatica de um ficheiro na cloud
     public boolean loadCloudData(String fileName) {
-        Gdx.app.log("FILENAME", fileName);
         tacticFileHandle.setFilePath(fileName);
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
-        Gdx.app.log("FILEPATH", tacticFileHandle.getFilePath());
-        //if (tacticFileHandle.getFileHandle().exists()) {
-            GdxFIRStorage.instance()
-                    .download(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
-                    .after(GdxFIRAuth.instance().getCurrentUserPromise())
-                    .then(fileMetadata -> {
-                        setTactic(tacticFileHandle.readTacticFromJSON());
-                        Gdx.app.log("LOADED FROM", "Cloud");
-                        setTacticLoaded(true);
-                        AssetLoader.loaded = true;
-                    })
 
-                    .fail((s, throwable) -> {
-                        Gdx.app.log("NOT LOADED FROM", "Cloud");
-                    });
-        /*} else {
-            //setFail(true);
-        }*/
+        GdxFIRStorage.instance()
+            .download(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
+            .after(GdxFIRAuth.instance().getCurrentUserPromise())
+            .then(fileMetadata -> {
+                setTactic(tacticFileHandle.readTacticFromJSON());
+                Gdx.app.log("LOADED FROM", "Cloud");
+                setTacticLoaded(true);
+                AssetLoader.loaded = true;
+            })
+            .fail((s, throwable) -> {
+                Gdx.app.log("NOT LOADED FROM", "Cloud");
+            });
 
         return AssetLoader.loaded;
     }

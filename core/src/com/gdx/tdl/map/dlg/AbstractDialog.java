@@ -41,10 +41,7 @@ public abstract class AbstractDialog {
 
     // ----- getters -----
     public boolean isShowing() { return this.showing; }
-    public boolean isFail() { return this.saveLoad.isFail(); }
-    public boolean isSuccess() { return this.saveLoad.isSuccess(); }
     public Stage getStage() { return this.stage; }
-    public Tactic getTacticFromSaveLoad() { return this.saveLoad.getTactic(); }
 
     // ----- setters -----
     public void setShowing(boolean showing) { this.showing = showing; }

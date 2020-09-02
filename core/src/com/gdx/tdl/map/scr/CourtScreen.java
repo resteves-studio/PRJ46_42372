@@ -34,9 +34,8 @@ import java.util.concurrent.TimeUnit;
 
 public class CourtScreen extends AbstractScreen implements GestureDetector.GestureListener {
     // opcoes de botoes existentes
-    private static final int MENU   = 0, FRAME  = 1, RUN = 2, PASS = 3, HELP = 4;
-    private static final int PLAY   = 6, RESET  = 7;
-    private static final int MANMAN = 8, ZONE   = 9;
+    private static final int MENU   = 0,  FRAME  = 1,  RUN = 2,    PASS = 3, HELP = 4;
+    private static final int PLAY   = 6,  RESET  = 7,  MANMAN = 8, ZONE = 9;
     private static final int SVFILE = 10, LDFILE = 11, NOTES = 12;
     private OptionButton[] offensiveOptions, defensiveOptions, tacticCreationOptions, saveOptions;
 
@@ -466,20 +465,12 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     }
 
     // verifica se todos os jogadores terminaram a jogada
-    /*private boolean frameOver() {
-        boolean over = true;
-        for (PlayerO player : offense) over &= player.isFrameOver();
-        over &= ball.isFrameOver();
-        return over;
-    }*/
-
-    // verifica se todos os jogadores terminaram a jogada
     private void startFrameOver() {
         for (PlayerO player : offense)
             player.setFrameOver(false);
     }
 
-    // reset dos parametros TODO melhorar
+    // reset dos parametros
     private void reset() {
         for (OptionButton opt : offensiveOptions) {
             if (opt.getIsSelected() && option != FRAME)
@@ -618,7 +609,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             if (!offense[bodyHitId].hasBall()) {
                 bodyHit = offense[bodyHitId].getBody();
             }
-        } // else if (option == SCREEN)
+        }
 
         playerAction(tactic.getEntryValue(f));
         reset();
@@ -640,7 +631,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     applyMove(f, tactic.getEntryKey(f)[0], tactic.getEntryKey(f)[1]);
                 }
 
-                waitTime(7500); // TODO tentar substituir tempo por frameOver (playerO e ball)
+                waitTime(6500);
                 flag += 5;
                 startFrameOver();
 
@@ -909,9 +900,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         // TODO verificar os que estao por colocar aqui
     }
 
-    @Override // TODO Maybe usar para definir posicoes iniciais dos jogadores?
-    public boolean longPress(float x, float y) { return false; }
-
+    @Override public boolean longPress(float x, float y) { return false; }
     @Override public boolean touchDown(float x, float y, int pointer, int button) { return false; }
     @Override public boolean fling(float velocityX, float velocityY, int button) { return false; }
     @Override public boolean pan(float x, float y, float deltaX, float deltaY) { return false; }
