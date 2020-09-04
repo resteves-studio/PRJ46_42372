@@ -20,6 +20,7 @@ import com.gdx.tdl.map.dlg.DialogNotes;
 import com.gdx.tdl.map.dlg.DialogSaveFile;
 import com.gdx.tdl.map.dlg.DialogToast;
 import com.gdx.tdl.map.tct.SaveLoad;
+import com.gdx.tdl.map.tct.TacticSingleton;
 import com.gdx.tdl.util.map.Box2dRadiusProximity;
 import com.gdx.tdl.util.map.OptionButton;
 import com.gdx.tdl.util.map.OptionsTable;
@@ -55,7 +56,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     private Ball ball;
 
     // tatica
-    private Tactic tactic = new Tactic();
     private boolean permissionToPlay = false;
     private boolean stillPlayingMove = false;
     private int firstPlayerWithBall;
@@ -68,7 +68,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
     private static final int D_FAIL = 4, D_SUCCESS = 5;
     private int currentDialog = -1;
 
-    private SaveLoad saveLoad = new SaveLoad(tactic);
+    private SaveLoad saveLoad = new SaveLoad();
 
     private DialogIntro dialogIntro = new DialogIntro();
     private DialogToast dialogNoPlay = new DialogToast("Nenhuma tatica por reproduzir", saveLoad);
@@ -275,15 +275,6 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                     dialogLoadFile.dialogStageDraw();
                 } else {
                     if (saveLoad.wasTacticLoaded()) {
-                        this.tactic = saveLoad.getTactic();
-                        dialogIntro.setTactic(this.tactic);
-                        dialogNoPlay.setTactic(this.tactic);
-                        dialogSaveFile.setTactic(this.tactic);
-                        dialogLoadFile.setTactic(this.tactic);
-                        dialogNotes.setTactic(this.tactic);
-                        successDialog.setTactic(this.tactic);
-                        failDialog.setTactic(this.tactic);
-                        saveLoad.setTacticLoaded(false);
                         Gdx.app.log("TACTIC", "LOADED");
                     }
                     Gdx.input.setInputProcessor(gestureDetector);
@@ -559,10 +550,10 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
         uncheckPlayers(offense);
 
         // definidas as posicoes iniciais
-        if (tactic.getNFrames() == -1) {
+        if (TacticSingleton.getInstance().getTactic().getNFrames() == -1) {
             for (int d = 0; d < offense.length; d++) {
                 Vector2 posInit = offense[d].getBody().getPosition().cpy();
-                tactic.addInitialPos(d, posInit);
+                TacticSingleton.getInstance().getTactic().addInitialPos(d, posInit);
                 if (offense[d].hasBall()) firstPlayerWithBall = d;
             }
 
@@ -570,24 +561,24 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 defense[d].setPlayerWithBall(offense[firstPlayerWithBall]);
                 defense[d].setInitMainTargetPosition();
                 Vector2 posInit = defense[d].getMainTargetPosition();
-                tactic.addInitialPos(d+5, posInit);
+                TacticSingleton.getInstance().getTactic().addInitialPos(d+5, posInit);
             }
 
-            tactic.setToBegin();
+            TacticSingleton.getInstance().getTactic().setToBegin();
         }
 
         // adicionada nova frame a lista
         else {
-            int size = tactic.getSize();
+            int size = TacticSingleton.getInstance().getTactic().getSize();
 
             for (int d = size; d < offense.length + size; d++) {
                 Integer[] moves = new Integer[] { offense[d % 5].getLastMove(), offense[d % 5].getReceiver() };
-                tactic.addToMovements(d, moves, offense[d % 5].getTarget().getBody().getPosition().cpy());
+                TacticSingleton.getInstance().getTactic().addToMovements(d, moves, offense[d % 5].getTarget().getBody().getPosition().cpy());
                 offense[d % 5].setLastMove(-1);
                 offense[d % 5].setReceiver(-1);
             }
 
-            tactic.setNFrames(tactic.getNFrames() + 1);
+            TacticSingleton.getInstance().getTactic().setNFrames(TacticSingleton.getInstance().getTactic().getNFrames() + 1);
         }
 
         // da permissao aos defesas para seguir os atacantes
@@ -611,14 +602,14 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             }
         }
 
-        playerAction(tactic.getEntryValue(f));
+        playerAction(TacticSingleton.getInstance().getTactic().getEntryValue(f));
         reset();
         waitTime(1); // thread stuff
     }
 
     // reproduz a tatica atual
     private void playTactic() {
-        if (tactic.initialPos != null && tactic.getSize() > 0 && tactic.getNFrames() > 0) {
+        if (TacticSingleton.getInstance().getTactic().initialPos != null && TacticSingleton.getInstance().getTactic().getSize() > 0 && TacticSingleton.getInstance().getTactic().getNFrames() > 0) {
             // da permissao aos defesas para adaptar a posicao
             for (PlayerD player : defense)
                 player.setPermissionToFollow(true);
@@ -628,7 +619,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
                 stillPlayingMove = true;
 
                 for (int f = flag - 5; f < flag; f++) {
-                    applyMove(f, tactic.getEntryKey(f)[0], tactic.getEntryKey(f)[1]);
+                    applyMove(f, TacticSingleton.getInstance().getTactic().getEntryKey(f)[0], TacticSingleton.getInstance().getTactic().getEntryKey(f)[1]);
                 }
 
                 waitTime(6500);
@@ -637,10 +628,10 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
             }, 2, TimeUnit.SECONDS);
 
-            tactic.setNFrames(tactic.getNFrames() - 1);
+            TacticSingleton.getInstance().getTactic().setNFrames(TacticSingleton.getInstance().getTactic().getNFrames() - 1);
 
             // verifica a situacao da lista
-            if (tactic.getNFrames() <= 0) {
+            if (TacticSingleton.getInstance().getTactic().getNFrames() <= 0) {
                 permissionToPlay = false;
                 stillPlayingMove = false;
                 reset();
@@ -650,8 +641,7 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
 
     // limpa a tatica atual
     private void resetTactic() {
-        tactic.cleanMovements();
-        tactic.cleanInitPos();
+        TacticSingleton.getInstance().setTactic(new Tactic());
 
         for (PlayerO playerO : offense) {
             playerO.setLastMove(-1);
@@ -720,19 +710,19 @@ public class CourtScreen extends AbstractScreen implements GestureDetector.Gestu
             tagButton();
 
             // reproducao da tatica
-            if (option == PLAY && tactic.getSize() > 0) {
-                tactic.setNFrames(tactic.getSize() / 5);
+            if (option == PLAY && TacticSingleton.getInstance().getTactic().getSize() > 0) {
+                TacticSingleton.getInstance().getTactic().setNFrames(TacticSingleton.getInstance().getTactic().getSize() / 5);
                 uncheckPlayers(offense);
                 flag = 5;
 
                 // coloca players e bola na posicao inicial
-                for (int p = 0; p < tactic.initialPos.length/2; p++) {
-                    Vector2 init = tactic.initialPos[p];
+                for (int p = 0; p < TacticSingleton.getInstance().getTactic().initialPos.length/2; p++) {
+                    Vector2 init = TacticSingleton.getInstance().getTactic().initialPos[p];
                     offense[p].setTargetPosition(init);
                     offense[p].setAtPosition(init);
                 }
-                for (int p = tactic.initialPos.length/2; p < tactic.initialPos.length; p++) {
-                    Vector2 init = tactic.initialPos[p];
+                for (int p = TacticSingleton.getInstance().getTactic().initialPos.length/2; p < TacticSingleton.getInstance().getTactic().initialPos.length; p++) {
+                    Vector2 init = TacticSingleton.getInstance().getTactic().initialPos[p];
                     defense[p-5].setMainTargetPosition(init);
                     defense[p-5].setAtPosition(init);
                 }

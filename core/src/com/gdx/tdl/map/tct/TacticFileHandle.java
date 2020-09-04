@@ -12,22 +12,20 @@ import org.json.simple.parser.ParseException;
 
 public class TacticFileHandle {
     private FileHandle fileHandle;
-    private Tactic tactic;
     private String fileName;
 
-    TacticFileHandle(Tactic tactic) {
-        this.tactic = tactic;
-        setFilePath(tactic.getName());
+    TacticFileHandle() {
+        setFilePath(TacticSingleton.getInstance().getTactic().getName());
         setFileHandle(this.fileName);
     }
 
     void writeTacticToJSON() {
         // initial positions
         JSONObject initialPositionsObject = new JSONObject();
-        for (int i = 0; i < tactic.getInitialPosLength(); i++) {
+        for (int i = 0; i < TacticSingleton.getInstance().getTactic().getInitialPosLength(); i++) {
             JSONArray initPos = new JSONArray();
-            initPos.add(tactic.getInitialPos(i).x);
-            initPos.add(tactic.getInitialPos(i).y);
+            initPos.add(TacticSingleton.getInstance().getTactic().getInitialPos(i).x);
+            initPos.add(TacticSingleton.getInstance().getTactic().getInitialPos(i).y);
 
             initialPositionsObject.put(i, initPos);
         }
@@ -36,14 +34,14 @@ public class TacticFileHandle {
 
         // movements
         JSONObject movementsObject = new JSONObject();
-        for (int i = 0; i < tactic.getSize(); i++) {
+        for (int i = 0; i < TacticSingleton.getInstance().getTactic().getSize(); i++) {
             JSONArray key = new JSONArray();
-            key.add(tactic.getEntryKey(i)[0]);
-            key.add(tactic.getEntryKey(i)[1]);
+            key.add(TacticSingleton.getInstance().getTactic().getEntryKey(i)[0]);
+            key.add(TacticSingleton.getInstance().getTactic().getEntryKey(i)[1]);
 
             JSONArray value = new JSONArray();
-            value.add(tactic.getEntryValue(i).x);
-            value.add(tactic.getEntryValue(i).y);
+            value.add(TacticSingleton.getInstance().getTactic().getEntryValue(i).x);
+            value.add(TacticSingleton.getInstance().getTactic().getEntryValue(i).y);
 
             JSONArray move = new JSONArray();
             move.add(key);
@@ -56,15 +54,15 @@ public class TacticFileHandle {
 
         // name
         JSONObject name = new JSONObject();
-        name.put("name", tactic.getName());
+        name.put("name", TacticSingleton.getInstance().getTactic().getName());
 
         // notes
         JSONObject notes = new JSONObject();
-        notes.put("notes", tactic.getNotes());
+        notes.put("notes", TacticSingleton.getInstance().getTactic().getNotes());
 
         // num frames
         JSONObject nFrames = new JSONObject();
-        nFrames.put("nFrames", tactic.getNFrames());
+        nFrames.put("nFrames", TacticSingleton.getInstance().getTactic().getNFrames());
 
         // tactic list
         JSONArray tacticList = new JSONArray();
@@ -144,6 +142,6 @@ public class TacticFileHandle {
     public FileHandle getFileHandle() { return this.fileHandle; }
 
     public void setFilePath(String fileName) { this.fileName = Gdx.files.getLocalStoragePath() + fileName + ".json"; }
-    public void setTacticName(String tacticName) { this.tactic.setName(tacticName); }
+    public void setTacticName(String tacticName) { TacticSingleton.getInstance().getTactic().setName(tacticName); }
     public void setFileHandle(String path) { this.fileHandle = Gdx.files.local(path); }
 }

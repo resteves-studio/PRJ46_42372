@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gdx.tdl.map.tct.SaveLoad;
+import com.gdx.tdl.map.tct.TacticSingleton;
 import com.gdx.tdl.util.AssetLoader;
 
 public class DialogNotes extends AbstractDialog {
@@ -25,15 +26,13 @@ public class DialogNotes extends AbstractDialog {
         stage.addActor(tableB);
 
         // text area
-        final TextArea notesTA = new TextArea(saveLoad.getTactic().getNotes(), AssetLoader.skinXP);
+        final TextArea notesTA = new TextArea(TacticSingleton.getInstance().getTactic().getNotes(), AssetLoader.skinXP);
         final StringBuilder strBuilder = new StringBuilder();
         notesTA.setMessageText(" notas");
-        notesTA.setTextFieldListener(new TextField.TextFieldListener() { // TODO resolver problema da newline
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if (c == '\t') {
-                    notesTA.setMessageText(strBuilder.append("\n").toString());
-                }
+        // TODO resolver problema da newline
+        notesTA.setTextFieldListener((textField, c) -> {
+            if (c == '\t') {
+                notesTA.setMessageText(strBuilder.append("\n").toString());
             }
         });
         tableB.add(notesTA).expand().fill();
@@ -54,8 +53,8 @@ public class DialogNotes extends AbstractDialog {
         submitTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                tactic.setNotes(notesTA.getText());
-                Gdx.app.log("NOTES", tactic.getNotes());
+                TacticSingleton.getInstance().getTactic().setNotes(notesTA.getText());
+                Gdx.app.log("NOTES", TacticSingleton.getInstance().getTactic().getNotes());
                 setShowing(false);
             }
         });

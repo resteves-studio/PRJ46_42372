@@ -48,13 +48,13 @@ public class DialogSaveFile extends AbstractDialog {
         stage.addActor(tableC);
 
         // botoes
-        TextButton loadTB = new TextButton("Guardar", AssetLoader.skin);
-        tableC.add(loadTB).expand().fill().padRight(Gdx.graphics.getWidth()/30f);
+        TextButton saveTB = new TextButton("Guardar", AssetLoader.skin);
+        tableC.add(saveTB).expand().fill().padRight(Gdx.graphics.getWidth()/30f);
         TextButton cancelTB = new TextButton("Cancelar", AssetLoader.skin);
         tableC.add(cancelTB).expand().fill().padLeft(Gdx.graphics.getWidth()/30f);
 
         // listeners
-        loadTB.addListener(new ChangeListener() {
+        saveTB.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String name = nameTF.getText().trim();

@@ -7,15 +7,12 @@ import com.gdx.tdl.util.AssetLoader;
 
 public class SaveLoad {
     TacticFileHandle tacticFileHandle;
-    Tactic tactic;
 
     private boolean success, fail, tacticLoaded;
 
-    public SaveLoad(Tactic tactic) {
-        if (tactic != null) {
-            setTactic(tactic);
-            setTacticFileHandle(tactic);
-        }
+    public SaveLoad() {
+        if (TacticSingleton.getInstance().getTactic() != null)
+            this.tacticFileHandle = new TacticFileHandle();
 
         this.success = false;
         this.fail = false;
@@ -24,8 +21,8 @@ public class SaveLoad {
 
     // guarda a tatica localmente
     public void saveLocalData() {
-        if (tactic != null && !tactic.isInitPosEmpty() && !tactic.getMovements().isEmpty()) {
-            tacticFileHandle.setFilePath(tactic.getName());
+        if (TacticSingleton.getInstance().getTactic() != null && !TacticSingleton.getInstance().getTactic().isInitPosEmpty() && !TacticSingleton.getInstance().getTactic().getMovements().isEmpty()) {
+            tacticFileHandle.setFilePath(TacticSingleton.getInstance().getTactic().getName());
             tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
             tacticFileHandle.writeTacticToJSON();
         } else {
@@ -35,8 +32,8 @@ public class SaveLoad {
 
     // guarda a tatica na cloud
     public void saveCloudData() {
-        if (tactic != null && !tactic.isInitPosEmpty() && !tactic.getMovements().isEmpty()) {
-            tacticFileHandle.setFilePath(tactic.getName());
+        if (TacticSingleton.getInstance().getTactic() != null && !TacticSingleton.getInstance().getTactic().isInitPosEmpty() && !TacticSingleton.getInstance().getTactic().getMovements().isEmpty()) {
+            tacticFileHandle.setFilePath(TacticSingleton.getInstance().getTactic().getName());
             tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
             tacticFileHandle.writeTacticToJSON();
 
@@ -60,12 +57,12 @@ public class SaveLoad {
         tacticFileHandle.setFileHandle(tacticFileHandle.getFilePath());
 
         if (tacticFileHandle.getFileHandle().exists()) {
-            setTactic(tacticFileHandle.readTacticFromJSON());
+            TacticSingleton.getInstance().setTactic(tacticFileHandle.readTacticFromJSON());
 
             Gdx.app.log("LOADED FROM", "Local");
-            Gdx.app.log("NEW TACTIC", "Name: " + getTactic().getName());
-            Gdx.app.log("NEW TACTIC", "Notes: " + getTactic().getNotes());
-            Gdx.app.log("NEW TACTIC", "Size: " + getTactic().getSize());
+            Gdx.app.log("NEW TACTIC", "Name: " + TacticSingleton.getInstance().getTactic().getName());
+            Gdx.app.log("NEW TACTIC", "Notes: " + TacticSingleton.getInstance().getTactic().getNotes());
+            Gdx.app.log("NEW TACTIC", "Size: " + TacticSingleton.getInstance().getTactic().getSize());
 
             setTacticLoaded(true);
         }
@@ -80,7 +77,7 @@ public class SaveLoad {
             .download(tacticFileHandle.getFileHandle().path(), tacticFileHandle.getFileHandle())
             .after(GdxFIRAuth.instance().getCurrentUserPromise())
             .then(fileMetadata -> {
-                setTactic(tacticFileHandle.readTacticFromJSON());
+                TacticSingleton.getInstance().setTactic(tacticFileHandle.readTacticFromJSON());
                 Gdx.app.log("LOADED FROM", "Cloud");
                 setTacticLoaded(true);
                 AssetLoader.loaded = true;
@@ -93,15 +90,12 @@ public class SaveLoad {
     }
 
     // ----- getters -----
-    public Tactic getTactic() { return this.tactic; }
     public boolean isFail() { return this.fail; }
     public boolean isSuccess() { return this.success; }
     public boolean wasTacticLoaded() { return this.tacticLoaded; }
 
     // ----- setters -----
-    public void setTactic(Tactic tactic) { this.tactic = tactic; }
     public void setTacticName(String tacticName) { this.tacticFileHandle.setTacticName(tacticName); }
-    public void setTacticFileHandle(Tactic tactic) { this.tacticFileHandle = new TacticFileHandle(tactic); }
     public void setFail(boolean fail) { this.fail = fail; }
     public void setSuccess(boolean success) { this.success = success; }
     public void setTacticLoaded(boolean tacticLoaded) { this.tacticLoaded = tacticLoaded; }
